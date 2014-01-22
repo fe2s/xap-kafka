@@ -67,7 +67,17 @@
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
-    <bean id="kafkaSpaceSynchronizationEndpoint" class="com.epam.openspaces.persistency.kafka.KafkaSpaceSynchronizationEndpoint" />
+    <bean id="kafkaSpaceSynchronizationEndpoint" class="com.epam.openspaces.persistency.kafka.KafkaSpaceSynchronizationEndpointFactoryBean">
+        <property name="producerProperties">
+            <props>
+                <!--<prop key="metadata.broker.list">10.23.13.40:9092</prop>-->
+                <prop key="metadata.broker.list">localhost:9092</prop>
+                <prop key="serializer.class">com.epam.openspaces.persistency.kafka.DataOperationEncoder</prop>
+                <prop key="partitioner.class">kafka.producer.DefaultPartitioner</prop>
+                <prop key="request.required.acks">1</prop>
+            </props>
+        </property>
+    </bean>
 
     <!--
         The mirror space. Uses the Hibernate external data source. Persists changes done on the Space that

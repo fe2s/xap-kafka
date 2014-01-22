@@ -19,7 +19,7 @@ public class Main {
 //
 //        Properties props = new Properties();
 //        props.put("metadata.broker.list", "localhost:9092");
-//        props.put("serializer.class", "com.epam.MyEncoder");
+//        props.put("serializer.class", "com.epam.openspaces.persistency.kafka.DataOperationEncoder");
 //        props.put("partitioner.class", "kafka.producer.DefaultPartitioner");
 //        props.put("request.required.acks", "1");
 //
