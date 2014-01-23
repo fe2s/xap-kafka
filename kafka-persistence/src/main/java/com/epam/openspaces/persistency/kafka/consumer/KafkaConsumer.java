@@ -3,6 +3,8 @@ package com.epam.openspaces.persistency.kafka.consumer;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.epam.openspaces.persistency.kafka.serializer.KafkaDataOperationDecoder;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;

@@ -26,8 +26,8 @@
 			<scope>provided</scope>
 		</dependency>
 		<!--
-			Jms not included anymore due to licensing issues. 
-			We don't need jms functionality so we exclude jms from kafka dependency.
+			Jmx dependencies are not published to central maven repo anymore to due to licensing issues.
+			We don't need jmx functionality so we exclude them.
 		 -->
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
@@ -41,10 +41,6 @@
                 <exclusion>
                     <groupId>com.sun.jdmk</groupId>
                     <artifactId>jmxtools</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>javax.jms</groupId>
-                    <artifactId>jms</artifactId>
                 </exclusion>
             </exclusions>
 		</dependency>

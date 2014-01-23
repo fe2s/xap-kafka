@@ -8,8 +8,7 @@ public class KafkaDataOperationIterator {
 
     private ConsumerIterator<String, KafkaDataOperation> consumerIterator;
 
-    public KafkaDataOperationIterator(
-            ConsumerIterator<String, KafkaDataOperation> iterator) {
+    public KafkaDataOperationIterator(ConsumerIterator<String, KafkaDataOperation> iterator) {
         consumerIterator = iterator;
     }
 

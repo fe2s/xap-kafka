@@ -12,11 +12,9 @@ import org.springframework.beans.factory.FactoryBean;
 
 import com.epam.openspaces.persistency.kafka.KafkaSpaceSynchronizationEndpointFactoryBean;
 
-public class KafkaConsumerFactoryBean implements FactoryBean<KafkaConsumer>,
-        DisposableBean {
+public class KafkaConsumerFactoryBean implements FactoryBean<KafkaConsumer>, DisposableBean {
 
-    private static final Log logger = LogFactory
-            .getLog(KafkaSpaceSynchronizationEndpointFactoryBean.class);
+    private static final Log logger = LogFactory.getLog(KafkaConsumerFactoryBean.class);
 
     private Properties consumerProperties;
     private ConsumerConnector consumer;
