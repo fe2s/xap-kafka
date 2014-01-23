@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:os-core="http://www.openspaces.org/schema/core"
+	xmlns:os-events="http://www.openspaces.org/schema/events"
+	xmlns:os-remoting="http://www.openspaces.org/schema/remoting"
+	xmlns:os-sla="http://www.openspaces.org/schema/sla"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.openspaces.org/schema/core http://www.openspaces.org/schema/core/openspaces-core.xsd
+       http://www.openspaces.org/schema/events http://www.openspaces.org/schema/9.1/events/openspaces-events.xsd
+       http://www.openspaces.org/schema/remoting http://www.openspaces.org/schema/9.1/remoting/openspaces-remoting.xsd
+       http://www.openspaces.org/schema/sla http://www.openspaces.org/schema/9.1/sla/openspaces-sla.xsd">
+
+
+	<!-- Spring property configurer which allows us to use system properties 
+		(such as user.name). -->
+	<bean id="propertiesConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	</bean>
+
+	<bean id="kafkaConsumer"
+		class="com.epam.openspaces.persistency.kafka.consumer.KafkaConsumerFactoryBean">
+		<property name="consumerProperties">
+			<props>
+				<!--<prop key="metadata.broker.list">10.23.13.40:9092</prop> -->
+				<prop key="zookeeper.connect">evbyminsd8370:2181</prop>
+				<prop key="group.id">0</prop>
+				<prop key="zookeeper.session.timeout.ms">400</prop>
+				<prop key="zookeeper.sync.time.ms">200</prop>
+				<prop key="auto.commit.interval.ms">1000</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="consumer" class="com.epam.consumer.Consumer"> 
+		<property name="consumer" ref="kafkaConsumer"/>    
+	</bean>
+
+</beans>

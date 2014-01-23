@@ -1,6 +1,6 @@
 package com.epam.openspaces.persistency.kafka;
 
-import com.epam.openspaces.persistency.kafka.protocol.DataOperation;
+import com.epam.openspaces.persistency.kafka.protocol.KafkaDataOperation;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.ProducerConfig;
 import org.apache.commons.logging.Log;
@@ -20,7 +20,7 @@ public class KafkaSpaceSynchronizationEndpointFactoryBean implements FactoryBean
     private static final Log logger = LogFactory.getLog(KafkaSpaceSynchronizationEndpointFactoryBean.class);
 
     private Properties producerProperties;
-    private Producer<String, DataOperation> producer;
+    private Producer<String, KafkaDataOperation> producer;
 
     @Override
     public KafkaSpaceSynchronizationEndpoint getObject() throws Exception {
@@ -28,7 +28,7 @@ public class KafkaSpaceSynchronizationEndpointFactoryBean implements FactoryBean
 
         // TODO: we need default properties like default encoder
         ProducerConfig config = new ProducerConfig(producerProperties);
-        this.producer = new Producer<String, DataOperation>(config);
+        this.producer = new Producer<String, KafkaDataOperation>(config);
 
         return new KafkaSpaceSynchronizationEndpoint(this.producer);
     }

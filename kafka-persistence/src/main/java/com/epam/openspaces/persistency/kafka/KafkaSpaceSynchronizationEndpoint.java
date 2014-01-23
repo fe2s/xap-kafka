@@ -1,6 +1,7 @@
 package com.epam.openspaces.persistency.kafka;
 
-import com.epam.openspaces.persistency.kafka.protocol.DataOperation;
+import com.epam.openspaces.persistency.kafka.annotations.KafkaTopic;
+import com.epam.openspaces.persistency.kafka.protocol.KafkaDataOperation;
 import com.gigaspaces.sync.DataSyncOperation;
 import com.gigaspaces.sync.OperationsBatchData;
 import com.gigaspaces.sync.SpaceSynchronizationEndpoint;
@@ -10,7 +11,7 @@ import kafka.producer.KeyedMessage;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import scala.util.parsing.combinator.testing.Str;
+import org.springframework.core.annotation.AnnotationUtils;
 
 /**
  * Created by Oleksiy_Dyagilev
@@ -19,9 +20,9 @@ public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpo
 
     private static final Log logger = LogFactory.getLog(KafkaSpaceSynchronizationEndpoint.class);
 
-    private final Producer<String, DataOperation> kafkaProducer;
+    private final Producer<String, KafkaDataOperation> kafkaProducer;
 
-    public KafkaSpaceSynchronizationEndpoint(Producer<String, DataOperation> kafkaProducer) {
+    public KafkaSpaceSynchronizationEndpoint(Producer<String, KafkaDataOperation> kafkaProducer) {
         this.kafkaProducer = kafkaProducer;
     }
 
@@ -35,11 +36,11 @@ public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpo
         executeDataSyncOperations(batchData.getBatchDataItems());
     }
 
-    private void executeDataSyncOperations(DataSyncOperation[] transactionParticipantDataItems) {
+    protected void executeDataSyncOperations(DataSyncOperation[] transactionParticipantDataItems) {
         // TODO: batch/buffering
         for (DataSyncOperation dataSyncOperation : transactionParticipantDataItems) {
             try {
-                DataOperation dataOperation = DataOperationFactory.create(dataSyncOperation);
+                KafkaDataOperation dataOperation = KafkaDataOperationFactory.create(dataSyncOperation);
                 String uid = dataSyncOperation.getUid();
 
                 writeToKafka(dataOperation);
@@ -49,16 +50,38 @@ public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpo
         }
     }
 
-    // TODO: need to write key for partiotioning
-    private void writeToKafka(DataOperation message) {
+    // TODO: need to write key for partitioning
+    protected void writeToKafka(KafkaDataOperation message) {
+
+        String topic = resolveTopicForMessage(message);
+        if (StringUtils.isEmpty(topic)) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("Topic for message not found. Message will be filtered out. " + message);
+            }
+            return;
+        }
+
         if (logger.isTraceEnabled()) {
             logger.trace("Writing to Kafka. message = " + message);
         }
 
-        // TODO: should be configurable
-        String topic = "test";
+        kafkaProducer.send(new KeyedMessage<String, KafkaDataOperation>(topic, message));
+    }
 
-        kafkaProducer.send(new KeyedMessage<String, DataOperation>(topic, message));
+    protected String resolveTopicForMessage(KafkaDataOperation message) {
+        if (message.hasDataAsObject()) {
+            // TODO: optimize with a cache
+            Object data = message.getDataAsObject();
+            KafkaTopic kafkaTopic = AnnotationUtils.findAnnotation(data.getClass(), KafkaTopic.class);
+            if (kafkaTopic == null) {
+                return null;
+            } else {
+                return kafkaTopic.value();
+            }
+        } else {
+            // TODO: topic for space document
+            return null;
+        }
     }
 
 }
