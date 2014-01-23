@@ -6,7 +6,7 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer;
-import com.epam.openspaces.persistency.kafka.protocol.DataOperation;
+import com.epam.openspaces.persistency.kafka.protocol.KafkaDataOperation;
 
 public class Consumer implements InitializingBean, DisposableBean {
 
@@ -23,8 +23,8 @@ public class Consumer implements InitializingBean, DisposableBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        ConsumerIterator<String, DataOperation> iterator = consumer
-                .getKafkaIterator("test");
+        ConsumerIterator<String, KafkaDataOperation> iterator = consumer
+                .getKafkaIterator("data");
 
         while (iterator.hasNext()) {
             System.out.println(iterator.next().message());

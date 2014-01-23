@@ -8,7 +8,7 @@ import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.serializer.StringDecoder;
 
-import com.epam.openspaces.persistency.kafka.protocol.DataOperation;
+import com.epam.openspaces.persistency.kafka.protocol.KafkaDataOperation;
 
 public class KafkaConsumer {
 
@@ -18,18 +18,18 @@ public class KafkaConsumer {
         kafkaConsumer = consumer;
     }
 
-    public ConsumerIterator<String, DataOperation> getKafkaIterator(String topic) {
+    public ConsumerIterator<String, KafkaDataOperation> getKafkaIterator(String topic) {
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
         topicCountMap.put(topic, new Integer(1));
-        Map<String, List<KafkaStream<String, DataOperation>>> streams = kafkaConsumer
+        Map<String, List<KafkaStream<String, KafkaDataOperation>>> streams = kafkaConsumer
                 .createMessageStreams(topicCountMap, new StringDecoder(null),
-                        new DataOperationDecoder());
+                        new KafkaDataOperationDecoder());
 
-        List<KafkaStream<String, DataOperation>> kafkaStreams = streams
+        List<KafkaStream<String, KafkaDataOperation>> kafkaStreams = streams
                 .get(topic);
 
-        ConsumerIterator<String, DataOperation> iterator = kafkaStreams.get(0)
-                .iterator();
+        ConsumerIterator<String, KafkaDataOperation> iterator = kafkaStreams
+                .get(0).iterator();
 
         return iterator;
     }

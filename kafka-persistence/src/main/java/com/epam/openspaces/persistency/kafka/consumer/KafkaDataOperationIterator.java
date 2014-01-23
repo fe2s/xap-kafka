@@ -2,14 +2,14 @@ package com.epam.openspaces.persistency.kafka.consumer;
 
 import kafka.consumer.ConsumerIterator;
 
-import com.epam.openspaces.persistency.kafka.protocol.DataOperation;
+import com.epam.openspaces.persistency.kafka.protocol.KafkaDataOperation;
 
 public class KafkaDataOperationIterator {
 
-    private ConsumerIterator<String, DataOperation> consumerIterator;
+    private ConsumerIterator<String, KafkaDataOperation> consumerIterator;
 
     public KafkaDataOperationIterator(
-            ConsumerIterator<String, DataOperation> iterator) {
+            ConsumerIterator<String, KafkaDataOperation> iterator) {
         consumerIterator = iterator;
     }
 
