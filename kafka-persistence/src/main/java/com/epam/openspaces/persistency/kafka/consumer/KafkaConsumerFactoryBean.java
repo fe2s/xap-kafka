@@ -7,11 +7,13 @@ import kafka.javaapi.consumer.ConsumerConnector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 
 import com.epam.openspaces.persistency.kafka.KafkaSpaceSynchronizationEndpointFactoryBean;
 
-public class KafkaConsumerFactoryBean implements FactoryBean<KafkaConsumer> {
+public class KafkaConsumerFactoryBean implements FactoryBean<KafkaConsumer>,
+        DisposableBean {
 
     private static final Log logger = LogFactory
             .getLog(KafkaSpaceSynchronizationEndpointFactoryBean.class);
@@ -37,6 +39,13 @@ public class KafkaConsumerFactoryBean implements FactoryBean<KafkaConsumer> {
     @Override
     public boolean isSingleton() {
         return true;
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        if (consumer != null) {
+            consumer.shutdown();
+        }
     }
 
     public void setConsumerProperties(Properties consumerProperties) {

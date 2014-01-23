@@ -19,13 +19,13 @@
     -->
     <os-core:giga-space-context/>
 
-    <bean id="kafkaDataSource" class="com.epam.openspaces.persistency.kafka.KafkaExternalDataSource"/>
+    <bean id="dummyDataSource" class="com.epam.datasource.DummyExternalDataSource"/>
 
     <!--
         A bean representing a space (an IJSpace implementation).
     -->
     <os-core:space id="space" url="/./space" schema="persistent" mirror="true"
-                   space-data-source="kafkaDataSource">
+                   space-data-source="dummyDataSource">
     </os-core:space>
 
     <!--

@@ -9,7 +9,7 @@ import com.epam.openspaces.persistency.kafka.protocol.KafkaDataOperation;
 public class KafkaDataOperationDecoder implements Decoder<KafkaDataOperation> {
 
     @Override
-    public KafkaDataOperation fromBytes(byte[] arg0) {
-        return (KafkaDataOperation) SerializationUtils.deserialize(arg0);
+    public KafkaDataOperation fromBytes(byte[] bytes) {
+        return (KafkaDataOperation) SerializationUtils.deserialize(bytes);
     }
 }
