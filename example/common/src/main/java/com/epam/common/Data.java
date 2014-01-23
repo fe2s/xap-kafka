@@ -1,5 +1,6 @@
 package com.epam.common;
 
+import com.epam.openspaces.persistency.kafka.annotations.KafkaTopic;
 import com.gigaspaces.annotation.pojo.SpaceClass;
 import com.gigaspaces.annotation.pojo.SpaceId;
 import com.gigaspaces.annotation.pojo.SpaceRouting;
@@ -7,6 +8,7 @@ import com.gigaspaces.annotation.pojo.SpaceRouting;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 /**
  * A simple object used to work with the Space. Important properties include the id
@@ -14,10 +16,11 @@ import javax.persistence.Id;
  * the raw data and processed data, and a boolean flag indicating if this Data object
  * was processed or not.
  */
+@KafkaTopic("data")
 @Entity
 @Table(name="DATA")
 @SpaceClass
-public class Data {
+public class Data implements Serializable {
 
     @Id
     private String id;
