@@ -34,6 +34,7 @@
         <module>mirror</module>
         <module>processor</module>
         <module>feeder</module>
+        <module>consumer</module>
     </modules>
     <dependencies>
         <dependency>
