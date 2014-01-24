@@ -8,7 +8,7 @@
     <name>mirror</name>
     <parent>
         <groupId>com.epam</groupId>
-        <artifactId>kafka-pers</artifactId>
+        <artifactId>kafka-persistence-example</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <properties>
