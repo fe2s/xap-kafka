@@ -1,5 +1,7 @@
 package com.epam.consumer;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import kafka.consumer.ConsumerIterator;
 
 import org.hibernate.HibernateException;
@@ -15,7 +17,7 @@ import com.gigaspaces.sync.SpaceSynchronizationEndpointException;
 public class Consumer implements InitializingBean {
 
     private KafkaConsumer consumer;
-
+    private ScheduledExecutorService executorService;
     private SessionFactory sessionFactory;
 
     public void setConsumer(KafkaConsumer consumer) {
@@ -29,7 +31,8 @@ public class Consumer implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
 
-        consume();
+        executorService = Executors.newScheduledThreadPool(1);
+        executorService.execute(new ConsumerTask());
     }
 
     private void consume() {
@@ -82,6 +85,15 @@ public class Consumer implements InitializingBean {
 
     private SessionFactory getSessionFactory() {
         return sessionFactory;
+    }
+
+    public class ConsumerTask implements Runnable {
+
+        @Override
+        public void run() {
+            consume();
+        }
+
     }
 
 }
