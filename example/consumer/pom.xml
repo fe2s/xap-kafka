@@ -9,10 +9,6 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <properties>
-        <gsType>PU</gsType>
-    </properties>
-
 	<properties>
 	    <gsType>PU</gsType>
 	</properties>
