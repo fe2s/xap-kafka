@@ -2,6 +2,7 @@ package com.epam.consumer;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import kafka.common.KafkaException;
 import kafka.consumer.ConsumerIterator;
 
 import org.hibernate.HibernateException;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer;
 import com.epam.openspaces.persistency.kafka.protocol.KafkaDataOperation;
-import com.gigaspaces.sync.SpaceSynchronizationEndpointException;
 
 public class Consumer implements InitializingBean {
 
@@ -51,13 +51,18 @@ public class Consumer implements InitializingBean {
                 case WRITE:
                     executeWrite(session, dataOperation);
                     break;
+                case UPDATE:
+                    executeUpdate(session, dataOperation);
+                    break;
+                case REMOVE:
+                    executeRemove(session, dataOperation);
                 default:
                     break;
                 }
                 tr.commit();
             } catch (Exception e) {
                 tr.rollback();
-                throw new SpaceSynchronizationEndpointException(
+                throw new KafkaException(
                         "Failed to execute bulk operation, latest object", e);
             } finally {
                 if (session.isOpen()) {
@@ -66,6 +71,20 @@ public class Consumer implements InitializingBean {
             }
         }
 
+    }
+
+    private void executeRemove(Session session, KafkaDataOperation dataOperation) {
+        if (!dataOperation.hasDataAsObject()) {
+            return;
+        }
+
+        Object entry = dataOperation.getDataAsObject();
+
+        try {
+            session.delete(entry);
+        } catch (HibernateException e) {
+            session.delete(session.merge(entry));
+        }
     }
 
     private void executeWrite(Session session, KafkaDataOperation dataOperation) {
@@ -80,7 +99,20 @@ public class Consumer implements InitializingBean {
         } catch (HibernateException e) {
             session.merge(entry);
         }
+    }
 
+    private void executeUpdate(Session session, KafkaDataOperation dataOperation) {
+        if (!dataOperation.hasDataAsObject()) {
+            return;
+        }
+
+        Object entry = dataOperation.getDataAsObject();
+
+        try {
+            session.saveOrUpdate(entry);
+        } catch (HibernateException e) {
+            session.merge(entry);
+        }
     }
 
     private SessionFactory getSessionFactory() {
