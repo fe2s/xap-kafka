@@ -26,11 +26,18 @@ public class KafkaSpaceSynchronizationEndpointFactoryBean implements FactoryBean
     public KafkaSpaceSynchronizationEndpoint getObject() throws Exception {
         logger.info("Initializing Kafka producer");
 
-        // TODO: we need default properties like default encoder
-        ProducerConfig config = new ProducerConfig(producerProperties);
+        Properties combinedProducerProps = applyDefaultProducerProperties();
+
+        ProducerConfig config = new ProducerConfig(combinedProducerProps);
         this.producer = new Producer<String, KafkaDataOperation>(config);
 
         return new KafkaSpaceSynchronizationEndpoint(this.producer);
+    }
+
+    protected Properties applyDefaultProducerProperties() {
+        DefaultProducerProperties combined = new DefaultProducerProperties();
+        combined.putAll(producerProperties);
+        return combined;
     }
 
     @Override

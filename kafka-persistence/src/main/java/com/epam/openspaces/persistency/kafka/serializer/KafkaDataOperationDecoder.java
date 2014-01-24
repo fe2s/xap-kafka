@@ -1,4 +1,4 @@
-package com.epam.openspaces.persistency.kafka.consumer;
+package com.epam.openspaces.persistency.kafka.serializer;
 
 import kafka.serializer.Decoder;
 

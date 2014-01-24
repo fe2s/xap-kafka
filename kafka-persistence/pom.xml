@@ -13,26 +13,26 @@
 	</parent>
 
 	<properties>
-		<!-- TODO: move all versions here -->
-		<gsVersion>9.6.2-9900-RELEASE</gsVersion>
-		<!--<springVersion>3.1.3.RELEASE</springVersion> -->
+		<gs.version>9.6.2-9900-RELEASE</gs.version>
+        <kafka.version>0.8.0</kafka.version>
+        <commons.lang.version>2.3</commons.lang.version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.gigaspaces</groupId>
 			<artifactId>gs-openspaces</artifactId>
-			<version>${gsVersion}</version>
+			<version>${gs.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<!--
-			Jms not included anymore due to licensing issues. 
-			We don't need jms functionality so we exclude jms from kafka dependency.
+			Jmx dependencies are not published to central maven repo anymore to due to licensing issues.
+			We don't need jmx functionality so we exclude them.
 		 -->
 		<dependency>
 			<groupId>org.apache.kafka</groupId>
 			<artifactId>kafka_2.9.2</artifactId>
-			<version>0.8.0</version>
+			<version>${kafka.version}</version>
 			<exclusions>
                 <exclusion>
                     <groupId>com.sun.jmx</groupId>
@@ -42,17 +42,13 @@
                     <groupId>com.sun.jdmk</groupId>
                     <artifactId>jmxtools</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>javax.jms</groupId>
-                    <artifactId>jms</artifactId>
-                </exclusion>
             </exclusions>
 		</dependency>
 		
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
-			<version>2.3</version>
+			<version>${commons.lang.version}</version>
 		</dependency>
 	</dependencies>
 

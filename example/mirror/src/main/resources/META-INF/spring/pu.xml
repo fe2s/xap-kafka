@@ -19,8 +19,6 @@
             <props>
                 <!--<prop key="metadata.broker.list">10.23.13.40:9092</prop>-->
                 <prop key="metadata.broker.list">evbyminsd8370:9092</prop>
-                <prop key="serializer.class">com.epam.openspaces.persistency.kafka.serializer.KafkaDataOperationEncoder</prop>
-                <prop key="partitioner.class">kafka.producer.DefaultPartitioner</prop>
                 <prop key="request.required.acks">1</prop>
             </props>
         </property>
