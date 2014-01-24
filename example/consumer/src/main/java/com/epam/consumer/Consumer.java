@@ -12,7 +12,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer;
-import com.epam.openspaces.persistency.kafka.protocol.KafkaDataOperation;
+import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
 
 public class Consumer implements InitializingBean {
 
@@ -37,7 +37,7 @@ public class Consumer implements InitializingBean {
 
     private void consume() {
 
-        ConsumerIterator<String, KafkaDataOperation> iterator = consumer
+        ConsumerIterator<String, KafkaMessage> iterator = consumer
                 .getKafkaIterator("data");
 
         while (iterator.hasNext()) {
@@ -45,17 +45,16 @@ public class Consumer implements InitializingBean {
             Transaction tr = session.beginTransaction();
             try {
 
-                KafkaDataOperation dataOperation = iterator.next().message();
-
-                switch (dataOperation.getType()) {
+                KafkaMessage kafkaMessage = iterator.next().message();
+                switch (kafkaMessage.getDataOperationType()) {
                 case WRITE:
-                    executeWrite(session, dataOperation);
+                    executeWrite(session, kafkaMessage);
                     break;
                 case UPDATE:
-                    executeUpdate(session, dataOperation);
+                    executeUpdate(session, kafkaMessage);
                     break;
                 case REMOVE:
-                    executeRemove(session, dataOperation);
+                    executeRemove(session, kafkaMessage);
                 default:
                     break;
                 }
@@ -73,12 +72,12 @@ public class Consumer implements InitializingBean {
 
     }
 
-    private void executeRemove(Session session, KafkaDataOperation dataOperation) {
-        if (!dataOperation.hasDataAsObject()) {
+    private void executeRemove(Session session, KafkaMessage kafkaMessage) {
+        if (!kafkaMessage.hasDataAsObject()) {
             return;
         }
 
-        Object entry = dataOperation.getDataAsObject();
+        Object entry = kafkaMessage.getDataAsObject();
 
         try {
             session.delete(entry);
@@ -87,12 +86,12 @@ public class Consumer implements InitializingBean {
         }
     }
 
-    private void executeWrite(Session session, KafkaDataOperation dataOperation) {
-        if (!dataOperation.hasDataAsObject()) {
+    private void executeWrite(Session session, KafkaMessage kafkaMessage) {
+        if (!kafkaMessage.hasDataAsObject()) {
             return;
         }
 
-        Object entry = dataOperation.getDataAsObject();
+        Object entry = kafkaMessage.getDataAsObject();
 
         try {
             session.saveOrUpdate(entry);
@@ -101,12 +100,12 @@ public class Consumer implements InitializingBean {
         }
     }
 
-    private void executeUpdate(Session session, KafkaDataOperation dataOperation) {
-        if (!dataOperation.hasDataAsObject()) {
+    private void executeUpdate(Session session, KafkaMessage kafkaMessage) {
+        if (!kafkaMessage.hasDataAsObject()) {
             return;
         }
 
-        Object entry = dataOperation.getDataAsObject();
+        Object entry = kafkaMessage.getDataAsObject();
 
         try {
             session.saveOrUpdate(entry);

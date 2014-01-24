@@ -1,6 +1,6 @@
 package com.epam.openspaces.persistency.kafka;
 
-import com.epam.openspaces.persistency.kafka.serializer.KafkaDataOperationEncoder;
+import com.epam.openspaces.persistency.kafka.serializer.KafkaMessageEncoder;
 import kafka.producer.DefaultPartitioner;
 
 import java.util.Properties;
@@ -11,7 +11,7 @@ import java.util.Properties;
 public class DefaultProducerProperties extends Properties {
 
     public DefaultProducerProperties() {
-        put("serializer.class", KafkaDataOperationEncoder.class.getCanonicalName());
+        put("serializer.class", KafkaMessageEncoder.class.getCanonicalName());
         put("partitioner.class", DefaultPartitioner.class.getCanonicalName());
     }
 

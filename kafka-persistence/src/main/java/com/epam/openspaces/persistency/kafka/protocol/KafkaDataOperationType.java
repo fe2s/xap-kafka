@@ -3,6 +3,6 @@ package com.epam.openspaces.persistency.kafka.protocol;
 /**
  * Created by Oleksiy_Dyagilev
  */
-public enum KafkaOperationType {
+public enum KafkaDataOperationType {
     WRITE, UPDATE, PARTIAL_UPDATE, REMOVE, REMOVE_BY_UID, CHANGE
 }

@@ -6,27 +6,27 @@ import java.util.Map;
 /**
  * Created by Oleksiy_Dyagilev
  */
-public class KafkaDataOperation implements Serializable {
+public class KafkaMessage implements Serializable {
 
-    private KafkaOperationType type;
+    private KafkaDataOperationType dataOperationType;
 
     // TODO: what about delete by id ?
 
     private Serializable dataAsObject;
     private Map<String, Object> dataAsMap;
 
-    public KafkaDataOperation(KafkaOperationType type, Serializable dataAsObject) {
-        this.type = type;
+    public KafkaMessage(KafkaDataOperationType dataOperationType, Serializable dataAsObject) {
+        this.dataOperationType = dataOperationType;
         this.dataAsObject = dataAsObject;
     }
 
-    public KafkaDataOperation(KafkaOperationType type, Map<String, Object> dataAsMap) {
-        this.type = type;
+    public KafkaMessage(KafkaDataOperationType dataOperationType, Map<String, Object> dataAsMap) {
+        this.dataOperationType = dataOperationType;
         this.dataAsMap = dataAsMap;
     }
 
-    public KafkaOperationType getType() {
-        return type;
+    public KafkaDataOperationType getDataOperationType() {
+        return dataOperationType;
     }
 
     public Serializable getDataAsObject() {
@@ -47,8 +47,8 @@ public class KafkaDataOperation implements Serializable {
 
     @Override
     public String toString() {
-        return "KafkaDataOperation{" +
-                "type=" + type +
+        return "KafkaMessage{" +
+                "dataOperationType=" + dataOperationType +
                 ", dataAsObject=" + dataAsObject +
                 ", dataAsMap=" + dataAsMap +
                 '}';
