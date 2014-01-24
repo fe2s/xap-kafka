@@ -21,7 +21,7 @@
 		class="com.epam.openspaces.persistency.kafka.consumer.KafkaConsumerFactoryBean">
 		<property name="consumerProperties">
 			<props>
-				<!--<prop key="metadata.broker.list">10.23.13.40:9092</prop> -->
+				<!--<prop key="metadata.broker.list">10.23.13.40:9092</prop>-->
 				<prop key="zookeeper.connect">evbyminsd8370:2181</prop>
 				<prop key="group.id">0</prop>
 				<prop key="zookeeper.session.timeout.ms">400</prop>

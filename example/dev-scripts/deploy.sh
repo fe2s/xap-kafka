@@ -16,3 +16,8 @@ echo "Deploying feeder..."
 pushd ../feeder
 mvn os:deploy -Dgroups=$GROUP -Dlocators=$LOCATORS
 popd
+
+echo "Deploying consumer..."
+pushd ../consumer
+mvn os:deploy -Dgroups=$GROUP -Dlocators=$LOCATORS
+popd
