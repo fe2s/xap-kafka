@@ -4,13 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.epam.openspaces.persistency.kafka.serializer.KafkaDataOperationDecoder;
+import com.epam.openspaces.persistency.kafka.serializer.KafkaMessageDecoder;
 import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.serializer.StringDecoder;
 
-import com.epam.openspaces.persistency.kafka.protocol.KafkaDataOperation;
+import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
 
 public class KafkaConsumer {
 
@@ -20,17 +20,17 @@ public class KafkaConsumer {
         kafkaConsumer = consumer;
     }
 
-    public ConsumerIterator<String, KafkaDataOperation> getKafkaIterator(String topic) {
+    public ConsumerIterator<String, KafkaMessage> getKafkaIterator(String topic) {
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
         topicCountMap.put(topic, new Integer(1));
-        Map<String, List<KafkaStream<String, KafkaDataOperation>>> streams = kafkaConsumer
+        Map<String, List<KafkaStream<String, KafkaMessage>>> streams = kafkaConsumer
                 .createMessageStreams(topicCountMap, new StringDecoder(null),
-                        new KafkaDataOperationDecoder());
+                        new KafkaMessageDecoder());
 
-        List<KafkaStream<String, KafkaDataOperation>> kafkaStreams = streams
+        List<KafkaStream<String, KafkaMessage>> kafkaStreams = streams
                 .get(topic);
 
-        ConsumerIterator<String, KafkaDataOperation> iterator = kafkaStreams
+        ConsumerIterator<String, KafkaMessage> iterator = kafkaStreams
                 .get(0).iterator();
 
         return iterator;

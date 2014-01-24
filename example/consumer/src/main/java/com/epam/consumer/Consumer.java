@@ -2,6 +2,8 @@ package com.epam.consumer;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+
+import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
 import kafka.consumer.ConsumerIterator;
 
 import org.hibernate.HibernateException;
@@ -11,7 +13,6 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer;
-import com.epam.openspaces.persistency.kafka.protocol.KafkaDataOperation;
 import com.gigaspaces.sync.SpaceSynchronizationEndpointException;
 
 public class Consumer implements InitializingBean {
@@ -37,7 +38,7 @@ public class Consumer implements InitializingBean {
 
     private void consume() {
 
-        ConsumerIterator<String, KafkaDataOperation> iterator = consumer
+        ConsumerIterator<String, KafkaMessage> iterator = consumer
                 .getKafkaIterator("data");
 
         while (iterator.hasNext()) {
@@ -45,14 +46,14 @@ public class Consumer implements InitializingBean {
             Transaction tr = session.beginTransaction();
             try {
 
-                KafkaDataOperation dataOperation = iterator.next().message();
+                KafkaMessage kafkaMessage = iterator.next().message();
 
-                switch (dataOperation.getType()) {
-                case WRITE:
-                    executeWrite(session, dataOperation);
-                    break;
-                default:
-                    break;
+                switch (kafkaMessage.getDataOperationType()) {
+                    case WRITE:
+                        executeWrite(session, kafkaMessage);
+                        break;
+                    default:
+                        break;
                 }
                 tr.commit();
             } catch (Exception e) {
@@ -68,19 +69,18 @@ public class Consumer implements InitializingBean {
 
     }
 
-    private void executeWrite(Session session, KafkaDataOperation dataOperation) {
-        if (!dataOperation.hasDataAsObject()) {
+    private void executeWrite(Session session, KafkaMessage kafkaMessage) {
+        if (!kafkaMessage.hasDataAsObject()) {
             return;
         }
 
-        Object entry = dataOperation.getDataAsObject();
+        Object entry = kafkaMessage.getDataAsObject();
 
         try {
             session.saveOrUpdate(entry);
         } catch (HibernateException e) {
             session.merge(entry);
         }
-
     }
 
     private SessionFactory getSessionFactory() {
