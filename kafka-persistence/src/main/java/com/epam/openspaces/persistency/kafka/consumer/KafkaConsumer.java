@@ -14,7 +14,7 @@ import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
 
 public class KafkaConsumer {
 
-    private ConsumerConnector consumerConnector;
+    protected ConsumerConnector consumerConnector;
 
     public KafkaConsumer(ConsumerConnector consumerConnector) {
         this.consumerConnector = consumerConnector;
@@ -35,4 +35,10 @@ public class KafkaConsumer {
 
         return iterator;
     }
+
+    public ConsumerConnector getConsumerConnector() {
+        return consumerConnector;
+    }
+
+    // TODO: we need to expose other methods of ConsumerConnector wrapping them around with our encoder
 }
