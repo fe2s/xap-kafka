@@ -9,12 +9,13 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
 import com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer;
 import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
 
-public class Consumer implements InitializingBean {
+public class Consumer implements InitializingBean, DisposableBean {
 
     private KafkaConsumer consumer;
     private ScheduledExecutorService executorService;
@@ -37,8 +38,7 @@ public class Consumer implements InitializingBean {
 
     private void consume() {
 
-        ConsumerIterator<String, KafkaMessage> iterator = consumer
-                .getKafkaIterator("data");
+        ConsumerIterator<String, KafkaMessage> iterator = consumer.createIterator("data");
 
         while (iterator.hasNext()) {
             Session session = getSessionFactory().openSession();
@@ -116,6 +116,11 @@ public class Consumer implements InitializingBean {
 
     private SessionFactory getSessionFactory() {
         return sessionFactory;
+    }
+
+    @Override
+    public void destroy() throws Exception {
+        executorService.shutdown();
     }
 
     public class ConsumerTask implements Runnable {

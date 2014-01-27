@@ -14,24 +14,24 @@ import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
 
 public class KafkaConsumer {
 
-    private ConsumerConnector kafkaConsumer;
+    private ConsumerConnector consumerConnector;
 
-    public KafkaConsumer(ConsumerConnector consumer) {
-        kafkaConsumer = consumer;
+    public KafkaConsumer(ConsumerConnector consumerConnector) {
+        this.consumerConnector = consumerConnector;
     }
 
-    public ConsumerIterator<String, KafkaMessage> getKafkaIterator(String topic) {
+    public ConsumerIterator<String, KafkaMessage> createIterator(String topic) {
         Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
-        topicCountMap.put(topic, new Integer(1));
-        Map<String, List<KafkaStream<String, KafkaMessage>>> streams = kafkaConsumer
-                .createMessageStreams(topicCountMap, new StringDecoder(null),
-                        new KafkaMessageDecoder());
+        topicCountMap.put(topic, 1);
 
-        List<KafkaStream<String, KafkaMessage>> kafkaStreams = streams
-                .get(topic);
+        Map<String, List<KafkaStream<String, KafkaMessage>>> streams = consumerConnector.createMessageStreams(
+                topicCountMap,
+                new StringDecoder(null),
+                new KafkaMessageDecoder());
 
-        ConsumerIterator<String, KafkaMessage> iterator = kafkaStreams
-                .get(0).iterator();
+        List<KafkaStream<String, KafkaMessage>> kafkaStreams = streams.get(topic);
+
+        ConsumerIterator<String, KafkaMessage> iterator = kafkaStreams.get(0).iterator();
 
         return iterator;
     }
