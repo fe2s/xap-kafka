@@ -6,6 +6,11 @@ import org.apache.commons.lang.SerializationUtils;
 
 import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
 
+/**
+ * Decoder for XAP-Kafka protocol.
+ *
+ * @see com.epam.openspaces.persistency.kafka.protocol.KafkaMessage
+ */
 public class KafkaMessageDecoder implements Decoder<KafkaMessage> {
 
     @Override

@@ -10,10 +10,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Oleksiy_Dyagilev
+ * Factory of Kafka messages.
+ *
+ * @author Oleksiy_Dyagilev
  */
 public class KafkaMessageFactory {
 
+    // mapping from XAP operation type to Kafka message operation type
     private static final Map<DataSyncOperationType, KafkaDataOperationType> typesMap = new HashMap<DataSyncOperationType, KafkaDataOperationType>();
     static {
         typesMap.put(DataSyncOperationType.WRITE, KafkaDataOperationType.WRITE);
@@ -24,6 +27,13 @@ public class KafkaMessageFactory {
         typesMap.put(DataSyncOperationType.UPDATE, KafkaDataOperationType.UPDATE);
     }
 
+    /**
+     * Creates Kafka message from XAP data sync operation.
+     * The underlying object of data sync operation must be Serializable,
+     * otherwise KafkaPersistenceException is thrown.
+     *
+     * @throws KafkaPersistenceException if underlying object of data sync operation is not Serializable.
+     */
     public static KafkaMessage create(DataSyncOperation syncOperation) throws KafkaPersistenceException {
         KafkaDataOperationType type = typesMap.get(syncOperation.getDataSyncOperationType());
 

@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * Created by Oleksiy_Dyagilev
+ * @author Oleksiy_Dyagilev
  */
 public class EmbeddedKafka {
 
@@ -25,7 +25,7 @@ public class EmbeddedKafka {
         this.zookeperPort = zookeperPort;
     }
 
-    public void startup() throws Exception {
+    public void startup() {
         logDir = TestUtils.tempDir();
 
         Properties props = new Properties();

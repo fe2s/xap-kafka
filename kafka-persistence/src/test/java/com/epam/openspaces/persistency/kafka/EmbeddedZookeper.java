@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 
 /**
- * Created by Oleksiy_Dyagilev
+ * @author Oleksiy_Dyagilev
  */
 public class EmbeddedZookeper {
 

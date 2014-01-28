@@ -6,7 +6,11 @@ import kafka.utils.VerifiableProperties;
 import org.apache.commons.lang.SerializationUtils;
 
 /**
- * Created by Oleksiy_Dyagilev
+ * Encoder for XAP-Kafka protocol.
+ *
+ * @see com.epam.openspaces.persistency.kafka.protocol.KafkaMessage
+ *
+ * @author Oleksiy_Dyagilev
  */
 public class KafkaMessageEncoder implements Encoder<KafkaMessage> {
 

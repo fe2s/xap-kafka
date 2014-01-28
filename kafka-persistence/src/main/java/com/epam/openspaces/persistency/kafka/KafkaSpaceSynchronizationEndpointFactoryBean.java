@@ -11,9 +11,9 @@ import org.springframework.beans.factory.FactoryBean;
 import java.util.Properties;
 
 /**
- * A factory bean which creates {@link KafkaSpaceSynchronizationEndpoint}
+ * A factory bean which creates {@link KafkaSpaceSynchronizationEndpoint} with given producer properties.
  *
- * Created by Oleksiy_Dyagilev
+ * @author Oleksiy_Dyagilev
  */
 public class KafkaSpaceSynchronizationEndpointFactoryBean implements FactoryBean<KafkaSpaceSynchronizationEndpoint>, DisposableBean {
 

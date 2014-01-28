@@ -17,7 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Oleksiy_Dyagilev
+ * An implementation of Space Synchronization Endpoint which uses Apache Kafka as external data store.
+ * Space synchronization operations are converted to Kafka protocol and sent to server.
+ *
+ * @author Oleksiy_Dyagilev
  */
 public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpoint {
 
@@ -41,9 +44,12 @@ public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpo
 
     protected void executeDataSyncOperations(DataSyncOperation[] transactionParticipantDataItems) {
         List<KafkaMessage> kafkaMessages = convertToKafkaMessages(transactionParticipantDataItems);
-        writeToKafka(kafkaMessages);
+        sendToKafka(kafkaMessages);
     }
 
+    /**
+     * converts XAP data sync operations to Kafka messages (protocol objects)
+     */
     private List<KafkaMessage> convertToKafkaMessages(DataSyncOperation[] transactionParticipantDataItems) {
         List<KafkaMessage> kafkaMessages = new ArrayList<KafkaMessage>(transactionParticipantDataItems.length);
         for (DataSyncOperation dataSyncOperation : transactionParticipantDataItems) {
@@ -58,7 +64,11 @@ public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpo
     }
 
     // TODO: need to write key for partitioning
-    protected void writeToKafka(List<KafkaMessage> kafkaMessages) {
+
+    /**
+     * sends given messages to Kafka server
+     */
+    protected void sendToKafka(List<KafkaMessage> kafkaMessages) {
         List<KeyedMessage<String, KafkaMessage>> keyedMessages = new ArrayList<KeyedMessage<String, KafkaMessage>>(kafkaMessages.size());
 
         for (KafkaMessage message : kafkaMessages) {
@@ -79,6 +89,9 @@ public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpo
         kafkaProducer.send(keyedMessages);
     }
 
+    /**
+     * inspects original data class for KafkaTopic annotation
+     */
     protected String resolveTopicForMessage(KafkaMessage message) {
         if (message.hasDataAsObject()) {
             // TODO: optimize with a cache

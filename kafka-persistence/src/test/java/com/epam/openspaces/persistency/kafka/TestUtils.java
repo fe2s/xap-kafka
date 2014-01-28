@@ -3,7 +3,7 @@ package com.epam.openspaces.persistency.kafka;
 import java.io.File;
 
 /**
- * Created by Oleksiy_Dyagilev
+ * @author Oleksiy_Dyagilev
  */
 public class TestUtils {
 

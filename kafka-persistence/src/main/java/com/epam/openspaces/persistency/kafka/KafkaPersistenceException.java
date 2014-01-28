@@ -1,7 +1,9 @@
 package com.epam.openspaces.persistency.kafka;
 
 /**
- * Created by Oleksiy_Dyagilev
+ * Indicates a problem during persisting data to Kafka
+ *
+ * @author Oleksiy_Dyagilev
  */
 public class KafkaPersistenceException extends Exception {
 

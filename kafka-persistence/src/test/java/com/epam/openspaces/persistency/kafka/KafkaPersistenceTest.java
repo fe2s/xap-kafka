@@ -45,8 +45,8 @@ public class KafkaPersistenceTest {
 //        Consumer consumerThread = new Consumer(KafkaProperties.topic);
 //        consumerThread.start();
 //
-        while (true) {
-        }
+//        while (true) {
+//        }
     }
 
     @AfterClass
