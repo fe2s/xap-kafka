@@ -4,13 +4,16 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * Created by Oleksiy_Dyagilev
+ * Defines XAP-Kafka message protocol.
+ *
+ * @see com.epam.openspaces.persistency.kafka.serializer.KafkaMessageEncoder
+ * @see com.epam.openspaces.persistency.kafka.serializer.KafkaMessageDecoder
+ *
+ * @author Oleksiy_Dyagilev
  */
 public class KafkaMessage implements Serializable {
 
     private KafkaDataOperationType dataOperationType;
-
-    // TODO: what about delete by id ?
 
     private Serializable dataAsObject;
     private Map<String, Object> dataAsMap;

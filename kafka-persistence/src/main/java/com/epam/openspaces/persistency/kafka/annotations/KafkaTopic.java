@@ -6,7 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Created by Oleksiy_Dyagilev
+ * Specifies the Kafka topic for the annotated entity.
+ *
+ * @author Oleksiy_Dyagilev
  */
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

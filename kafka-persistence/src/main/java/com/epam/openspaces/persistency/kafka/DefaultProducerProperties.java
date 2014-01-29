@@ -6,7 +6,9 @@ import kafka.producer.DefaultPartitioner;
 import java.util.Properties;
 
 /**
- * Created by Oleksiy_Dyagilev
+ * Default producer properties to configure XAP-Kafka protocol serializer {@link KafkaMessageEncoder}.
+ *
+ * @author Oleksiy_Dyagilev
  */
 public class DefaultProducerProperties extends Properties {
 
