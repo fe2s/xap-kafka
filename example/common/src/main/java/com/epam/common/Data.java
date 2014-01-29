@@ -11,10 +11,7 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
- * A simple object used to work with the Space. Important properties include the id
- * of the object, a type (used to perform routing when working with partitioned space),
- * the raw data and processed data, and a boolean flag indicating if this Data object
- * was processed or not.
+ * A simple object used to work with the Space.
  */
 @KafkaTopic("data")
 @Entity
@@ -29,15 +26,10 @@ public class Data implements Serializable {
 
     private String rawData;
 
-    private String data;
-
-    private Boolean processed;
-
     /**
      * Constructs a new Data object.
      */
     public Data() {
-
     }
 
     /**
@@ -47,7 +39,6 @@ public class Data implements Serializable {
     public Data(long type, String rawData) {
         this.type = type;
         this.rawData = rawData;
-        this.processed = false;
     }
 
     /**
@@ -97,35 +88,12 @@ public class Data implements Serializable {
         this.rawData = rawData;
     }
 
-    /**
-     * The processed data this object holds.
-     */
-    public String getData() {
-        return data;
-    }
-
-    /**
-     * The processed data this object holds.
-     */
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    /**
-     * A boolean flag indicating if the data object was processed or not.
-     */
-    public Boolean isProcessed() {
-        return processed;
-    }
-
-    /**
-     * A boolean flag indicating if the data object was processed or not.
-     */
-    public void setProcessed(Boolean processed) {
-        this.processed = processed;
-    }
-
+    @Override
     public String toString() {
-        return "id[" + id + "] type[" + type + "] rawData[" + rawData + "] data[" + data + "] processed[" + processed + "]";
+        return "Data{" +
+                "id='" + id + '\'' +
+                ", type=" + type +
+                ", rawData='" + rawData + '\'' +
+                '}';
     }
 }

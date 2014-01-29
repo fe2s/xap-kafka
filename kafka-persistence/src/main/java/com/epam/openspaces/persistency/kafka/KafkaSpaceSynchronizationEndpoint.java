@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * An implementation of Space Synchronization Endpoint which uses Apache Kafka as external data store.
- * Space synchronization operations are converted to Kafka protocol and sent to server.
+ * Space synchronization operations are converted to XAP-Kafka protocol and sent to Kafka server.
  *
  * @author Oleksiy_Dyagilev
  */
@@ -26,7 +26,7 @@ public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpo
 
     private static final Log logger = LogFactory.getLog(KafkaSpaceSynchronizationEndpoint.class);
 
-    private final Producer<String, KafkaMessage> kafkaProducer;
+    protected final Producer<String, KafkaMessage> kafkaProducer;
 
     public KafkaSpaceSynchronizationEndpoint(Producer<String, KafkaMessage> kafkaProducer) {
         this.kafkaProducer = kafkaProducer;
@@ -50,7 +50,7 @@ public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpo
     /**
      * converts XAP data sync operations to Kafka messages (protocol objects)
      */
-    private List<KafkaMessage> convertToKafkaMessages(DataSyncOperation[] transactionParticipantDataItems) {
+    protected List<KafkaMessage> convertToKafkaMessages(DataSyncOperation[] transactionParticipantDataItems) {
         List<KafkaMessage> kafkaMessages = new ArrayList<KafkaMessage>(transactionParticipantDataItems.length);
         for (DataSyncOperation dataSyncOperation : transactionParticipantDataItems) {
             try {
@@ -75,7 +75,8 @@ public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpo
             String topic = resolveTopicForMessage(message);
             if (StringUtils.isEmpty(topic)) {
                 if (logger.isTraceEnabled()) {
-                    logger.trace("Topic for message not found. Message will be filtered out. " + message);
+                    logger.trace("Topic for message not found. Message will be filtered out. " +
+                            "If unintended, please check that @KafkaTopic annotation specified for underlying class. " + message);
                 }
             } else {
                 if (logger.isTraceEnabled()) {
@@ -90,7 +91,7 @@ public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpo
     }
 
     /**
-     * inspects original data class for KafkaTopic annotation
+     * inspects original data class for @KafkaTopic annotation
      */
     protected String resolveTopicForMessage(KafkaMessage message) {
         if (message.hasDataAsObject()) {
@@ -103,7 +104,7 @@ public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpo
                 return kafkaTopic.value();
             }
         } else {
-            // TODO: topic for space document
+            // TODO: topic for space document are not implemented
             return null;
         }
     }

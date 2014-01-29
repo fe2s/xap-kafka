@@ -14,7 +14,7 @@ import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
 
 public class KafkaConsumer {
 
-    protected ConsumerConnector consumerConnector;
+    private ConsumerConnector consumerConnector;
 
     public KafkaConsumer(ConsumerConnector consumerConnector) {
         this.consumerConnector = consumerConnector;

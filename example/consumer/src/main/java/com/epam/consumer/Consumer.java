@@ -5,6 +5,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import kafka.common.KafkaException;
 import kafka.consumer.ConsumerIterator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,6 +18,8 @@ import com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer;
 import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
 
 public class Consumer implements InitializingBean, DisposableBean {
+
+    private static final Log logger = LogFactory.getLog(Consumer.class);
 
     private KafkaConsumer consumer;
     private ScheduledExecutorService executorService;
@@ -46,17 +50,20 @@ public class Consumer implements InitializingBean, DisposableBean {
             try {
 
                 KafkaMessage kafkaMessage = iterator.next().message();
+                logger.info("Consuming message " + kafkaMessage);
+                System.out.println("Consuming message " + kafkaMessage);
+
                 switch (kafkaMessage.getDataOperationType()) {
-                case WRITE:
-                    executeWrite(session, kafkaMessage);
-                    break;
-                case UPDATE:
-                    executeUpdate(session, kafkaMessage);
-                    break;
-                case REMOVE:
-                    executeRemove(session, kafkaMessage);
-                default:
-                    break;
+                    case WRITE:
+                        executeWrite(session, kafkaMessage);
+                        break;
+                    case UPDATE:
+                        executeUpdate(session, kafkaMessage);
+                        break;
+                    case REMOVE:
+                        executeRemove(session, kafkaMessage);
+                    default:
+                        break;
                 }
                 tr.commit();
             } catch (Exception e) {
@@ -69,6 +76,8 @@ public class Consumer implements InitializingBean, DisposableBean {
                 }
             }
         }
+
+        System.out.println("Consumer finished");
 
     }
 
