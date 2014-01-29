@@ -1,55 +1,59 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>kafka-persistence</artifactId>
-    <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
-    <name>kafka-persistence</name>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>kafka-persistence</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>kafka-persistence</name>
 
-    <parent>
-        <groupId>com.epam</groupId>
-        <artifactId>xap-kafka</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<groupId>com.epam</groupId>
+		<artifactId>xap-kafka</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
 
-    <properties>
-        <gs.version>9.6.2-9900-RELEASE</gs.version>
-        <kafka.version>0.8.0</kafka.version>
-        <commons.lang.version>2.3</commons.lang.version>
-    </properties>
+	<properties>
+		<gs.version>9.6.2-9900-RELEASE</gs.version>
+		<kafka.version>0.8.0</kafka.version>
+		<commons.lang.version>2.3</commons.lang.version>
+	</properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.gigaspaces</groupId>
-            <artifactId>gs-openspaces</artifactId>
-            <version>${gs.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!--
-            Jmx dependencies are not published to central maven repo anymore to due to licensing issues.
-            We don't need jmx functionality so we exclude them.
-         -->
-        <dependency>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka_2.9.2</artifactId>
-            <version>${kafka.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sun.jmx</groupId>
-                    <artifactId>jmxri</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.jdmk</groupId>
-                    <artifactId>jmxtools</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+	<dependencies>
+		<dependency>
+			<groupId>com.gigaspaces</groupId>
+			<artifactId>gs-openspaces</artifactId>
+			<version>${gs.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Jmx dependencies are not published to central maven repo anymore to 
+			due to licensing issues. We don't need jmx functionality so we exclude them. -->
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka_2.9.2</artifactId>
+			<version>${kafka.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun.jmx</groupId>
+					<artifactId>jmxri</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>com.sun.jdmk</groupId>
+					<artifactId>jmxtools</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
 
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>${commons.lang.version}</version>
-        </dependency>
-    </dependencies>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>${commons.lang.version}</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>junit</groupId>
+		    <artifactId>junit</artifactId>
+		    <version>4.11</version>
+		</dependency>
+	</dependencies>
 
 </project>
