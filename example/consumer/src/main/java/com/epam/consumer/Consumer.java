@@ -42,7 +42,8 @@ public class Consumer implements InitializingBean, DisposableBean {
 
     private void consume() {
 
-        ConsumerIterator<String, KafkaMessage> iterator = consumer.createIterator("data");
+        ConsumerIterator<String, KafkaMessage> iterator = consumer
+                .createIterator("data");
 
         while (iterator.hasNext()) {
             Session session = getSessionFactory().openSession();
@@ -54,16 +55,16 @@ public class Consumer implements InitializingBean, DisposableBean {
                 System.out.println("Consuming message " + kafkaMessage);
 
                 switch (kafkaMessage.getDataOperationType()) {
-                    case WRITE:
-                        executeWrite(session, kafkaMessage);
-                        break;
-                    case UPDATE:
-                        executeUpdate(session, kafkaMessage);
-                        break;
-                    case REMOVE:
-                        executeRemove(session, kafkaMessage);
-                    default:
-                        break;
+                case WRITE:
+                    // executeWrite(session, kafkaMessage);
+                    break;
+                case UPDATE:
+                    // executeUpdate(session, kafkaMessage);
+                    break;
+                case REMOVE:
+                    // executeRemove(session, kafkaMessage);
+                default:
+                    break;
                 }
                 tr.commit();
             } catch (Exception e) {

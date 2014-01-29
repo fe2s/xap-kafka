@@ -1,4 +1,4 @@
-package com.epam.datasource;
+package com.epam.openspaces.persistency.kafka;
 
 import com.gigaspaces.datasource.SpaceDataSource;
 

@@ -38,6 +38,7 @@ public class EmbeddedZookeper {
     public void shutdown() {
         factory.shutdown();
         zooKeeper.shutdown();
+
         try {
             FileUtils.deleteDirectory(snapDir);
             FileUtils.deleteDirectory(logDir);

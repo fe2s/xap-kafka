@@ -1,14 +1,12 @@
 package com.epam.openspaces.persistency.kafka;
 
-import kafka.server.KafkaConfig;
-import kafka.server.KafkaServerStartable;
-import org.apache.commons.io.FileUtils;
-
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
+import kafka.server.KafkaConfig;
+import kafka.server.KafkaServerStartable;
+
+import org.apache.commons.io.FileUtils;
 
 /**
  * @author Oleksiy_Dyagilev
@@ -32,7 +30,7 @@ public class EmbeddedKafka {
         props.setProperty("zookeeper.connect", "localhost:" + zookeperPort);
         props.setProperty("port", String.valueOf(kafkaPort));
         props.setProperty("broker.id", "0");
-        props.setProperty("num.partitions", "2");
+        props.setProperty("num.partitions", "1");
         props.setProperty("log.dirs", logDir.getAbsolutePath());
 
         KafkaConfig kafkaConfig = new KafkaConfig(props);
@@ -46,7 +44,7 @@ public class EmbeddedKafka {
         try {
             FileUtils.deleteDirectory(logDir);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to delete temp dirs" , e);
+            throw new RuntimeException("Failed to delete temp dirs", e);
         }
     }
 }

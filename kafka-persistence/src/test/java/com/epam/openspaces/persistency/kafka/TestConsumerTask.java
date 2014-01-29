@@ -1,5 +1,7 @@
 package com.epam.openspaces.persistency.kafka;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
@@ -12,6 +14,7 @@ public class TestConsumerTask extends Thread {
     private String topic;
     private KafkaConsumer consumer;
     private int objectCount;
+    private List<KafkaMessage> result;
 
     public TestConsumerTask(String topic, int objectCount) {
         this.objectCount = objectCount;
@@ -28,6 +31,7 @@ public class TestConsumerTask extends Thread {
         props.put("zookeeper.session.timeout.ms", "400");
         props.put("zookeeper.sync.time.ms", "200");
         props.put("auto.commit.interval.ms", "1000");
+        props.put("auto.offset.reset", "smallest");
 
         return new ConsumerConfig(props);
 
@@ -35,21 +39,20 @@ public class TestConsumerTask extends Thread {
 
     @Override
     public void run() {
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        result = new ArrayList<KafkaMessage>(objectCount);
         ConsumerIterator<String, KafkaMessage> iterator = consumer
                 .createIterator(topic);
-        int i = 1;
         while (iterator.hasNext()) {
-            System.out.println(iterator.next().message());
-            if (i >= objectCount) {
+            result.add(iterator.next().message());
+            if (result.size() >= objectCount) {
                 break;
             }
-            i++;
+
         }
+    }
+
+    public List<KafkaMessage> getResult() throws InterruptedException {
+        this.join();
+        return result;
     }
 }

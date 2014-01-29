@@ -19,7 +19,7 @@
     -->
     <os-core:giga-space-context/>
 
-    <bean id="dummyDataSource" class="com.epam.datasource.DummyExternalDataSource"/>
+    <bean id="dummyDataSource" class="com.epam.openspaces.persistency.kafka.DummyExternalDataSource"/>
 
     <!--
         A bean representing a space (an IJSpace implementation).
