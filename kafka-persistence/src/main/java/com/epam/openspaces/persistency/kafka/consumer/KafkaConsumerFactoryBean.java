@@ -10,6 +10,9 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 
+/**
+ * Creates {@link com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer} bean.
+ */
 public class KafkaConsumerFactoryBean implements FactoryBean<KafkaConsumer>, DisposableBean {
 
     private static final Log logger = LogFactory.getLog(KafkaConsumerFactoryBean.class);
