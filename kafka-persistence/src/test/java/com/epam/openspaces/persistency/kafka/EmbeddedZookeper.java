@@ -1,12 +1,12 @@
 package com.epam.openspaces.persistency.kafka;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.zookeeper.server.NIOServerCnxn;
-import org.apache.zookeeper.server.ZooKeeperServer;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.zookeeper.server.NIOServerCnxn;
+import org.apache.zookeeper.server.ZooKeeperServer;
 
 /**
  * @author Oleksiy_Dyagilev
@@ -42,7 +42,7 @@ public class EmbeddedZookeper {
             FileUtils.deleteDirectory(snapDir);
             FileUtils.deleteDirectory(logDir);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to delete temp dirs" , e);
+            throw new RuntimeException("Failed to delete temp dirs", e);
         }
     }
 }
