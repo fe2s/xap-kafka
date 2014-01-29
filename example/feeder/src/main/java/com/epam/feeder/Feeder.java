@@ -36,7 +36,7 @@ public class Feeder implements InitializingBean, DisposableBean {
 
     private long numberOfTypes = 10;
 
-    private long defaultDelay = 10000;
+    private long defaultDelay = 1000;
 
     private FeederTask feederTask;
 

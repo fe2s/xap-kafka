@@ -17,6 +17,10 @@ import org.springframework.beans.factory.InitializingBean;
 import com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer;
 import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
 
+/**
+ * Illustrates how to subscribe to Kafka topic with a help of {@link KafkaConsumer}
+ * Consumed data is saved to database.
+ */
 public class Consumer implements InitializingBean, DisposableBean {
 
     private static final Log logger = LogFactory.getLog(Consumer.class);
@@ -51,7 +55,6 @@ public class Consumer implements InitializingBean, DisposableBean {
 
                 KafkaMessage kafkaMessage = iterator.next().message();
                 logger.info("Consuming message " + kafkaMessage);
-                System.out.println("Consuming message " + kafkaMessage);
 
                 switch (kafkaMessage.getDataOperationType()) {
                     case WRITE:
@@ -76,8 +79,6 @@ public class Consumer implements InitializingBean, DisposableBean {
                 }
             }
         }
-
-        System.out.println("Consumer finished");
 
     }
 

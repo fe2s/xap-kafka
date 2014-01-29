@@ -15,6 +15,7 @@
         <property name="locations">
             <list>
                 <value>classpath:database.properties</value>
+                <value>classpath:kafka.properties</value>
             </list>
         </property>
     </bean>
@@ -58,12 +59,11 @@
 		class="com.epam.openspaces.persistency.kafka.consumer.KafkaConsumerFactoryBean">
 		<property name="consumerProperties">
 			<props>
-				<!--<prop key="metadata.broker.list">10.23.13.40:9092</prop>-->
-				<prop key="zookeeper.connect">evbyminsd8370:2181</prop>
-				<prop key="group.id">0</prop>
-				<prop key="zookeeper.session.timeout.ms">400</prop>
-				<prop key="zookeeper.sync.time.ms">200</prop>
-				<prop key="auto.commit.interval.ms">1000</prop>
+				<prop key="zookeeper.connect">${zookeeper.connect}</prop>
+				<prop key="group.id">${group.id}</prop>
+				<prop key="zookeeper.session.timeout.ms">${zookeeper.session.timeout.ms}</prop>
+				<prop key="zookeeper.sync.time.ms">${zookeeper.sync.time.ms}</prop>
+				<prop key="auto.commit.interval.ms">${auto.commit.interval.ms}</prop>
 			</props>
 		</property>
 	</bean>

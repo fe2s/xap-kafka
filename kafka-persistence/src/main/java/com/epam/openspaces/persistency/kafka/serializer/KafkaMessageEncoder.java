@@ -15,7 +15,7 @@ import org.apache.commons.lang.SerializationUtils;
 public class KafkaMessageEncoder implements Encoder<KafkaMessage> {
 
     public KafkaMessageEncoder(VerifiableProperties props) {
-        // TODO
+        // this constructor is used by Kafka to create an instance of Encoder classes via reflection
     }
 
     @Override

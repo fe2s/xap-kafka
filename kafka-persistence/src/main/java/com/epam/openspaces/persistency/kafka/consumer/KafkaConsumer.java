@@ -12,6 +12,9 @@ import kafka.serializer.StringDecoder;
 
 import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
 
+/**
+ * Wrapper around @{link ConsumerConnector} to help configure iterators with XAP-Kafka message decoder.
+ */
 public class KafkaConsumer {
 
     private ConsumerConnector consumerConnector;
@@ -40,5 +43,4 @@ public class KafkaConsumer {
         return consumerConnector;
     }
 
-    // TODO: we need to expose other methods of ConsumerConnector wrapping them around with our encoder
 }
