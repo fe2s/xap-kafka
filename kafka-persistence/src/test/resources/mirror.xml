@@ -13,12 +13,6 @@
 
     <bean id="kafkaSpaceSynchronizationEndpoint" class="com.epam.openspaces.persistency.kafka.KafkaSpaceSynchronizationEndpointFactoryBean" >
         <property name="producerProperties" ref="producerProperties"/>
-
-            <!--<props>-->
-                <!--<prop key="metadata.broker.list">localhost:9092</prop>-->
-                <!--<prop key="request.required.acks">1</prop>-->
-            <!--</props>-->
-        <!--</property>-->
     </bean>
 
     <!--
