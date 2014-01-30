@@ -18,8 +18,8 @@ import com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer;
 import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
 
 /**
- * Illustrates how to subscribe to Kafka topic with a help of {@link KafkaConsumer}
- * Consumed data is saved to database.
+ * Illustrates how to subscribe to Kafka topic with a help of
+ * {@link KafkaConsumer} Consumed data is saved to database.
  */
 public class Consumer implements InitializingBean, DisposableBean {
 
@@ -59,13 +59,13 @@ public class Consumer implements InitializingBean, DisposableBean {
 
                 switch (kafkaMessage.getDataOperationType()) {
                 case WRITE:
-                    // executeWrite(session, kafkaMessage);
+                    executeWrite(session, kafkaMessage);
                     break;
                 case UPDATE:
-                    // executeUpdate(session, kafkaMessage);
+                    executeUpdate(session, kafkaMessage);
                     break;
                 case REMOVE:
-                    // executeRemove(session, kafkaMessage);
+                    executeRemove(session, kafkaMessage);
                 default:
                     break;
                 }

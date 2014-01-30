@@ -2,6 +2,10 @@ package com.epam.openspaces.persistency.kafka;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -27,7 +31,7 @@ public class KafkaPersistenceTest {
     @BeforeClass
     public static void init() throws Exception {
         int zookeeperPort = 2181; // TODO: we might want to choose from
-                                  // available ones instead of hardcoding
+        // available ones instead of hardcoding
         int kafkaPort = 9092;
 
         embeddedZookeper = new EmbeddedZookeper(zookeeperPort);
@@ -45,7 +49,7 @@ public class KafkaPersistenceTest {
     }
 
     @Test
-    public void test() throws InterruptedException {
+    public void test() throws ExecutionException, InterruptedException {
 
         System.out.println("test");
 
@@ -54,7 +58,9 @@ public class KafkaPersistenceTest {
         "jini://*/*/space?groups=kafka-test")).gigaSpace();
 
         TestConsumerTask consumer = new TestConsumerTask("data", objectCount);
-        consumer.start();
+        ExecutorService ex = Executors.newCachedThreadPool();
+
+        Future<List<KafkaMessage>> result = ex.submit(consumer);
 
         List<KafkaMessage> expectedList = new ArrayList<KafkaMessage>();
 
@@ -63,26 +69,23 @@ public class KafkaPersistenceTest {
             // Insert data to space
             Data data = new Data(i, "FEEDER Write" + Long.toString(time));
             gigaspace.write(data);
-            KafkaMessage messageWrite = new KafkaMessage(
-                    KafkaDataOperationType.WRITE, data);
+            KafkaMessage messageWrite = new KafkaMessage(KafkaDataOperationType.WRITE, data);
             expectedList.add(messageWrite);
 
             // Update data to space
             data.setRawData("FEEDER Update" + Long.toString(time));
             gigaspace.write(data);
-            KafkaMessage messageUpdate = new KafkaMessage(
-                    KafkaDataOperationType.UPDATE, data);
+            KafkaMessage messageUpdate = new KafkaMessage(KafkaDataOperationType.UPDATE, data);
             expectedList.add(messageUpdate);
 
             // Remove data to space
             gigaspace.clear(data);
-            KafkaMessage messageRemove = new KafkaMessage(
-                    KafkaDataOperationType.REMOVE, data);
+            KafkaMessage messageRemove = new KafkaMessage(KafkaDataOperationType.REMOVE, data);
             expectedList.add(messageRemove);
 
         }
 
-        List<KafkaMessage> actualList = consumer.getResult();
+        List<KafkaMessage> actualList = result.get();
 
         assertEquals(expectedList, actualList);
 

@@ -3,6 +3,7 @@ package com.epam.openspaces.persistency.kafka;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Callable;
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
@@ -10,11 +11,10 @@ import kafka.consumer.ConsumerIterator;
 import com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer;
 import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
 
-public class TestConsumerTask extends Thread {
+public class TestConsumerTask implements Callable<List<KafkaMessage>> {
     private String topic;
     private KafkaConsumer consumer;
     private int objectCount;
-    private List<KafkaMessage> result;
 
     public TestConsumerTask(String topic, int objectCount) {
         this.objectCount = objectCount;
@@ -38,8 +38,8 @@ public class TestConsumerTask extends Thread {
     }
 
     @Override
-    public void run() {
-        result = new ArrayList<KafkaMessage>(objectCount);
+    public List<KafkaMessage> call() throws Exception {
+        List<KafkaMessage> result = new ArrayList<KafkaMessage>(objectCount);
         ConsumerIterator<String, KafkaMessage> iterator = consumer
                 .createIterator(topic);
         while (iterator.hasNext()) {
@@ -47,12 +47,8 @@ public class TestConsumerTask extends Thread {
             if (result.size() >= objectCount) {
                 break;
             }
-
         }
-    }
-
-    public List<KafkaMessage> getResult() throws InterruptedException {
-        this.join();
         return result;
     }
+
 }
