@@ -18,8 +18,7 @@ public class TestConsumerTask implements Callable<List<KafkaMessage>> {
 
     public TestConsumerTask(String topic, int objectCount) {
         this.objectCount = objectCount;
-        consumer = new KafkaConsumer(
-                Consumer.createJavaConsumerConnector(createConsumerConfig()));
+        consumer = new KafkaConsumer(Consumer.createJavaConsumerConnector(createConsumerConfig()));
 
         this.topic = topic;
     }
@@ -40,8 +39,7 @@ public class TestConsumerTask implements Callable<List<KafkaMessage>> {
     @Override
     public List<KafkaMessage> call() throws Exception {
         List<KafkaMessage> result = new ArrayList<KafkaMessage>(objectCount);
-        ConsumerIterator<String, KafkaMessage> iterator = consumer
-                .createIterator(topic);
+        ConsumerIterator<String, KafkaMessage> iterator = consumer.createIterator(topic);
         while (iterator.hasNext()) {
             result.add(iterator.next().message());
             if (result.size() >= objectCount) {

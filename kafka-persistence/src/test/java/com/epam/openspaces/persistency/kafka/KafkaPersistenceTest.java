@@ -51,11 +51,7 @@ public class KafkaPersistenceTest {
     @Test
     public void test() throws ExecutionException, InterruptedException {
 
-        System.out.println("test");
-
-        GigaSpace gigaspace = new GigaSpaceConfigurer(new UrlSpaceConfigurer(
-
-        "jini://*/*/space?groups=kafka-test")).gigaSpace();
+        GigaSpace gigaspace = new GigaSpaceConfigurer(new UrlSpaceConfigurer("jini://*/*/space?groups=kafka-test")).gigaSpace();
 
         TestConsumerTask consumer = new TestConsumerTask("data", objectCount);
         ExecutorService ex = Executors.newCachedThreadPool();
@@ -88,7 +84,6 @@ public class KafkaPersistenceTest {
         List<KafkaMessage> actualList = result.get();
 
         assertEquals(expectedList, actualList);
-
     }
 
     @AfterClass

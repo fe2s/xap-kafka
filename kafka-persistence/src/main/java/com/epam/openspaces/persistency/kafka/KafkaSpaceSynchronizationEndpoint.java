@@ -63,8 +63,6 @@ public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpo
         return kafkaMessages;
     }
 
-    // TODO: need to write key for partitioning
-
     /**
      * sends given messages to Kafka server
      */
@@ -95,7 +93,7 @@ public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpo
      */
     protected String resolveTopicForMessage(KafkaMessage message) {
         if (message.hasDataAsObject()) {
-            // TODO: optimize with a cache
+            // consider perf optimization with a cache
             Object data = message.getDataAsObject();
             KafkaTopic kafkaTopic = AnnotationUtils.findAnnotation(data.getClass(), KafkaTopic.class);
             if (kafkaTopic == null) {
@@ -104,7 +102,7 @@ public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpo
                 return kafkaTopic.value();
             }
         } else {
-            // TODO: topic for space document are not implemented
+            // TODO: topic for space document is not implemented
             return null;
         }
     }
