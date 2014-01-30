@@ -32,7 +32,7 @@
     </bean>
 
     <!--
-        Hibernate SessionFactory bean. Uses the pooled data source to connect to the database.
+        Hibernate SessionFactory bean.
     -->
     <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
@@ -54,11 +54,11 @@
         </property>
     </bean>
 
-
-	<bean id="kafkaConsumer"
-		class="com.epam.openspaces.persistency.kafka.consumer.KafkaConsumerFactoryBean">
+    <!-- Kafka Consumer, wrapper around native Kafka producer API -->
+	<bean id="kafkaConsumer" class="com.epam.openspaces.persistency.kafka.consumer.KafkaConsumerFactoryBean">
 		<property name="consumerProperties">
 			<props>
+                <!-- Kafka consumer properties. Consult Kafka documentation for a list of available properties -->
 				<prop key="zookeeper.connect">${zookeeper.connect}</prop>
 				<prop key="group.id">${group.id}</prop>
 				<prop key="zookeeper.session.timeout.ms">${zookeeper.session.timeout.ms}</prop>
@@ -68,6 +68,7 @@
 		</property>
 	</bean>
 
+    <!-- Consumer which implements business logic, consumes data from Kafka and saves to database using Hibernate -->
 	<bean id="consumer" class="com.epam.consumer.Consumer">
 		<property name="consumer" ref="kafkaConsumer" />
 		<property name="sessionFactory" ref="sessionFactory" />

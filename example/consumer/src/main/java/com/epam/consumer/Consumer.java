@@ -46,8 +46,7 @@ public class Consumer implements InitializingBean, DisposableBean {
 
     private void consume() {
 
-        ConsumerIterator<String, KafkaMessage> iterator = consumer
-                .createIterator("data");
+        ConsumerIterator<String, KafkaMessage> iterator = consumer.createIterator("data");
 
         while (iterator.hasNext()) {
             Session session = getSessionFactory().openSession();
@@ -72,8 +71,7 @@ public class Consumer implements InitializingBean, DisposableBean {
                 tr.commit();
             } catch (Exception e) {
                 tr.rollback();
-                throw new KafkaException(
-                        "Failed to execute bulk operation, latest object", e);
+                throw new KafkaException("Failed to execute bulk operation, latest object", e);
             } finally {
                 if (session.isOpen()) {
                     session.close();

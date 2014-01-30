@@ -19,6 +19,7 @@
     -->
     <os-core:giga-space-context/>
 
+    <!-- Empty data source -->
     <bean id="dummyDataSource" class="com.epam.datasource.DummyExternalDataSource"/>
 
     <!--
