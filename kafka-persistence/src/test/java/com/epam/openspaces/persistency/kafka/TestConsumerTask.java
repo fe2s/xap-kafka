@@ -18,9 +18,7 @@ public class TestConsumerTask extends Thread {
 
     public TestConsumerTask(String topic, int objectCount) {
         this.objectCount = objectCount;
-        consumer = new KafkaConsumer(
-                Consumer.createJavaConsumerConnector(createConsumerConfig()));
-
+        this.consumer = new KafkaConsumer(Consumer.createJavaConsumerConnector(createConsumerConfig()));
         this.topic = topic;
     }
 
@@ -40,14 +38,12 @@ public class TestConsumerTask extends Thread {
     @Override
     public void run() {
         result = new ArrayList<KafkaMessage>(objectCount);
-        ConsumerIterator<String, KafkaMessage> iterator = consumer
-                .createIterator(topic);
+        ConsumerIterator<String, KafkaMessage> iterator = consumer.createIterator(topic);
         while (iterator.hasNext()) {
             result.add(iterator.next().message());
             if (result.size() >= objectCount) {
                 break;
             }
-
         }
     }
 

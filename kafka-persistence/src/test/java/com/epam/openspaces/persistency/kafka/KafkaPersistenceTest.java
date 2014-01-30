@@ -47,11 +47,7 @@ public class KafkaPersistenceTest {
     @Test
     public void test() throws InterruptedException {
 
-        System.out.println("test");
-
-        GigaSpace gigaspace = new GigaSpaceConfigurer(new UrlSpaceConfigurer(
-
-        "jini://*/*/space?groups=kafka-test")).gigaSpace();
+        GigaSpace gigaspace = new GigaSpaceConfigurer(new UrlSpaceConfigurer("jini://*/*/space?groups=kafka-test")).gigaSpace();
 
         TestConsumerTask consumer = new TestConsumerTask("data", objectCount);
         consumer.start();
@@ -63,21 +59,18 @@ public class KafkaPersistenceTest {
             // Insert data to space
             Data data = new Data(i, "FEEDER Write" + Long.toString(time));
             gigaspace.write(data);
-            KafkaMessage messageWrite = new KafkaMessage(
-                    KafkaDataOperationType.WRITE, data);
+            KafkaMessage messageWrite = new KafkaMessage(KafkaDataOperationType.WRITE, data);
             expectedList.add(messageWrite);
 
             // Update data to space
             data.setRawData("FEEDER Update" + Long.toString(time));
             gigaspace.write(data);
-            KafkaMessage messageUpdate = new KafkaMessage(
-                    KafkaDataOperationType.UPDATE, data);
+            KafkaMessage messageUpdate = new KafkaMessage(KafkaDataOperationType.UPDATE, data);
             expectedList.add(messageUpdate);
 
             // Remove data to space
             gigaspace.clear(data);
-            KafkaMessage messageRemove = new KafkaMessage(
-                    KafkaDataOperationType.REMOVE, data);
+            KafkaMessage messageRemove = new KafkaMessage(KafkaDataOperationType.REMOVE, data);
             expectedList.add(messageRemove);
 
         }
@@ -85,7 +78,6 @@ public class KafkaPersistenceTest {
         List<KafkaMessage> actualList = consumer.getResult();
 
         assertEquals(expectedList, actualList);
-
     }
 
     @AfterClass
