@@ -1,10 +1,11 @@
 package com.epam.openspaces.persistency.kafka;
 
-import java.io.IOException;
-
 import org.openspaces.core.cluster.ClusterInfo;
 import org.openspaces.pu.container.ProcessingUnitContainer;
 import org.openspaces.pu.container.integrated.IntegratedProcessingUnitContainerProvider;
+
+import java.io.IOException;
+
 
 /**
  * @author Mykola_Zalyayev
@@ -43,7 +44,7 @@ public class EmbeddedSpace {
     }
 
     public enum Schema {
-        NONE, PARTITIONED;
+        NONE, PARTITIONED
     }
 
 }

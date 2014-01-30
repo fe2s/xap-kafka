@@ -1,12 +1,8 @@
 package com.epam.openspaces.persistency.kafka;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
+import com.epam.openspaces.persistency.kafka.EmbeddedSpace.Schema;
+import com.epam.openspaces.persistency.kafka.protocol.KafkaDataOperationType;
+import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -14,25 +10,30 @@ import org.openspaces.core.GigaSpace;
 import org.openspaces.core.GigaSpaceConfigurer;
 import org.openspaces.core.space.UrlSpaceConfigurer;
 
-import static org.junit.Assert.assertEquals;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-import com.epam.openspaces.persistency.kafka.EmbeddedSpace.Schema;
-import com.epam.openspaces.persistency.kafka.protocol.KafkaDataOperationType;
-import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
+import static org.junit.Assert.assertEquals;
 
 public class KafkaPersistenceTest {
 
+    private static final int objectCount = 30;
     private static EmbeddedZookeper embeddedZookeper;
     private static EmbeddedKafka embeddedKafka;
     private static EmbeddedSpace embeddedSpace;
     private static EmbeddedSpace embeddedMiror;
-    private static final int objectCount = 30;
+    private static int zookeeperPort;
 
     @BeforeClass
     public static void init() throws Exception {
-        int zookeeperPort = 2181; // TODO: we might want to choose from
-        // available ones instead of hardcoding
-        int kafkaPort = 9092;
+        ProducerProperties props = ProducerProperties.getInstance();
+
+        zookeeperPort = props.getZookeeperPort();
+        int kafkaPort = props.getKafkaPort();
 
         embeddedZookeper = new EmbeddedZookeper(zookeeperPort);
         embeddedZookeper.startup();
@@ -48,12 +49,21 @@ public class KafkaPersistenceTest {
 
     }
 
+    @AfterClass
+    public static void shutdown() {
+        embeddedMiror.shutdown();
+        embeddedSpace.shutdown();
+
+        embeddedKafka.shutdown();
+        embeddedZookeper.shutdown();
+    }
+
     @Test
     public void test() throws ExecutionException, InterruptedException {
 
         GigaSpace gigaspace = new GigaSpaceConfigurer(new UrlSpaceConfigurer("jini://*/*/space?groups=kafka-test")).gigaSpace();
 
-        TestConsumerTask consumer = new TestConsumerTask("data", objectCount);
+        TestConsumerTask consumer = new TestConsumerTask("data", objectCount, zookeeperPort);
         ExecutorService ex = Executors.newCachedThreadPool();
 
         Future<List<KafkaMessage>> result = ex.submit(consumer);
@@ -84,15 +94,5 @@ public class KafkaPersistenceTest {
         List<KafkaMessage> actualList = result.get();
 
         assertEquals(expectedList, actualList);
-    }
-
-    @AfterClass
-    public static void shutdown() {
-        embeddedKafka.shutdown();
-        embeddedZookeper.shutdown();
-
-        embeddedMiror.shutdown();
-        embeddedSpace.shutdown();
-
     }
 }
