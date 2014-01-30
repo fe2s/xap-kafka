@@ -24,8 +24,8 @@
     </bean>
 
     <!--
-        The mirror space. Uses the Hibernate external data source. Persists changes done on the Space that
-        connects to this mirror space into the database using Hibernate.
+        The mirror space. Uses the Kafka external data source. Persists changes done on the Space that
+        connects to this mirror space into the Kafka.
     -->
     <os-core:mirror id="mirror" url="/./mirror-service?groups=kafka-test" space-sync-endpoint="kafkaSpaceSynchronizationEndpoint" operation-grouping="group-by-replication-bulk">
         <os-core:source-space name="space" partitions="2" backups="1"/>
