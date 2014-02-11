@@ -10,6 +10,8 @@ import org.springframework.beans.factory.FactoryBean;
 
 import java.util.Properties;
 
+import static com.epam.openspaces.persistency.kafka.KafkaSpaceSynchronizationEndpoint.Config;
+
 /**
  * A factory bean which creates {@link KafkaSpaceSynchronizationEndpoint} with given producer properties.
  *
@@ -22,16 +24,25 @@ public class KafkaSpaceSynchronizationEndpointFactoryBean implements FactoryBean
     private Properties producerProperties;
     private Producer<String, KafkaMessage> producer;
 
+    private String spaceDocumentKafkaTopicName = "aaa";
+
     @Override
     public KafkaSpaceSynchronizationEndpoint getObject() throws Exception {
         logger.info("Initializing Kafka producer");
 
         Properties combinedProducerProps = applyDefaultProducerProperties();
 
+        Config synchronizationEndpointConfig = aplySynchronizationEndpointConfig();
         ProducerConfig config = new ProducerConfig(combinedProducerProps);
         this.producer = new Producer<String, KafkaMessage>(config);
 
-        return new KafkaSpaceSynchronizationEndpoint(this.producer);
+        return new KafkaSpaceSynchronizationEndpoint(this.producer, synchronizationEndpointConfig);
+    }
+
+    private Config aplySynchronizationEndpointConfig() {
+        Config config = new Config();
+        config.setSpaceDocumentKafkaTopicName(spaceDocumentKafkaTopicName);
+        return config;
     }
 
     protected Properties applyDefaultProducerProperties() {
@@ -52,6 +63,10 @@ public class KafkaSpaceSynchronizationEndpointFactoryBean implements FactoryBean
 
     public void setProducerProperties(Properties producerProperties) {
         this.producerProperties = producerProperties;
+    }
+
+    public void setSpaceDocumentKafkaTopicName(String spaceDocumentKafkaTopicName) {
+        this.spaceDocumentKafkaTopicName = spaceDocumentKafkaTopicName;
     }
 
     @Override

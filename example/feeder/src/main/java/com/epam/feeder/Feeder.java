@@ -6,6 +6,8 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import com.epam.common.Product;
+import com.gigaspaces.document.SpaceDocument;
 import org.openspaces.core.GigaSpace;
 import org.openspaces.core.SpaceInterruptedException;
 import org.openspaces.core.context.GigaSpaceContext;
@@ -45,7 +47,7 @@ public class Feeder implements InitializingBean, DisposableBean {
 
     /**
      * Sets the number of types that will be used to set
-     * {@link org.openspaces.example.data.common.Data#setType(Long)}.
+     * {@link com.epam.common.Data#setType(Long)}.
      * 
      * <p>
      * The type is used as the routing index for partitioned space. This will
@@ -90,6 +92,11 @@ public class Feeder implements InitializingBean, DisposableBean {
                 Data data = new Data((counter++ % numberOfTypes), "FEEDER "
                         + Long.toString(time));
                 gigaSpace.write(data);
+                Product product = new Product()
+                        .setCatalogNumber("hw-"+counter)
+                        .setName("Anvil")
+                        .setPrice(9.99f);
+                gigaSpace.write(product);
                 log.info("--- FEEDER WROTE " + data);
             } catch (SpaceInterruptedException e) {
                 // ignore, we are being shutdown

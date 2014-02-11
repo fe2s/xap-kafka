@@ -27,6 +27,8 @@
                 <prop key="request.required.acks">${request.required.acks}</prop>
             </props>
         </property>
+        <property name="" />
+
     </bean>
 
     <!--

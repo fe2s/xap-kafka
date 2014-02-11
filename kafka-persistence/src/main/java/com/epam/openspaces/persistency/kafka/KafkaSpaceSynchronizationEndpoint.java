@@ -27,9 +27,11 @@ public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpo
     private static final Log logger = LogFactory.getLog(KafkaSpaceSynchronizationEndpoint.class);
 
     protected final Producer<String, KafkaMessage> kafkaProducer;
+    protected final Config config;
 
-    public KafkaSpaceSynchronizationEndpoint(Producer<String, KafkaMessage> kafkaProducer) {
+    public KafkaSpaceSynchronizationEndpoint(Producer<String, KafkaMessage> kafkaProducer, Config config) {
         this.kafkaProducer = kafkaProducer;
+        this.config = config;
     }
 
     @Override
@@ -102,8 +104,19 @@ public class KafkaSpaceSynchronizationEndpoint extends SpaceSynchronizationEndpo
                 return kafkaTopic.value();
             }
         } else {
-            // TODO: topic for space document is not implemented
-            return null;
+            return message.getDataAsMap().get(config.getSpaceDocumentKafkaTopicName()).toString();
+        }
+    }
+
+    public static class Config {
+        private String spaceDocumentKafkaTopicName;
+
+        public String getSpaceDocumentKafkaTopicName() {
+            return spaceDocumentKafkaTopicName;
+        }
+
+        public void setSpaceDocumentKafkaTopicName(String spaceDocumentKafkaTopicName) {
+            this.spaceDocumentKafkaTopicName = spaceDocumentKafkaTopicName;
         }
     }
 
