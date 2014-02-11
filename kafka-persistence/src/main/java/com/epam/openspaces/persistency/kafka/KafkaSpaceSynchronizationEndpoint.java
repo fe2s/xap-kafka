@@ -8,7 +8,7 @@ import kafka.javaapi.producer.Producer;
 import org.springframework.core.annotation.AnnotationUtils;
 
 /**
- * An implementation of Space Synchronization Endpoint which uses Apache Kafka as external data store.
+ * Default implementation of Space Synchronization Endpoint which uses Apache Kafka as external data store.
  * Space synchronization operations are converted to XAP-Kafka protocol and sent to Kafka server.
  *
  * @author Oleksiy_Dyagilev

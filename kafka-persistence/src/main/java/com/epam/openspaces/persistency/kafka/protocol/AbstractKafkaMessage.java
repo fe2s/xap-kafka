@@ -1,7 +1,7 @@
 package com.epam.openspaces.persistency.kafka.protocol;
 
 /**
- * Defines XAP-Kafka message protocol.
+ * Message of XAP-Kafka protocol.
  *
  * @author Oleksiy_Dyagilev
  */
