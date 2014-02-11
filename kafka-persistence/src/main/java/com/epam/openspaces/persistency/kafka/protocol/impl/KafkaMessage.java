@@ -1,17 +1,19 @@
-package com.epam.openspaces.persistency.kafka.protocol;
+package com.epam.openspaces.persistency.kafka.protocol.impl;
+
+import com.epam.openspaces.persistency.kafka.protocol.AbstractKafkaMessage;
 
 import java.io.Serializable;
 import java.util.Map;
 
 /**
- * Defines XAP-Kafka message protocol.
+ * Message of default XAP-Kafka protocol.
  * 
- * @see com.epam.openspaces.persistency.kafka.serializer.KafkaMessageEncoder
- * @see com.epam.openspaces.persistency.kafka.serializer.KafkaMessageDecoder
+ * @see com.epam.openspaces.persistency.kafka.protocol.impl.serializer.KafkaMessageEncoder
+ * @see com.epam.openspaces.persistency.kafka.protocol.impl.serializer.KafkaMessageDecoder
  * 
  * @author Oleksiy_Dyagilev
  */
-public class KafkaMessage implements Serializable {
+public class KafkaMessage implements AbstractKafkaMessage, Serializable {
 
     private KafkaDataOperationType dataOperationType;
 
@@ -19,13 +21,13 @@ public class KafkaMessage implements Serializable {
     private Map<String, Object> dataAsMap;
 
     public KafkaMessage(KafkaDataOperationType dataOperationType,
-            Serializable dataAsObject) {
+                        Serializable dataAsObject) {
         this.dataOperationType = dataOperationType;
         this.dataAsObject = dataAsObject;
     }
 
     public KafkaMessage(KafkaDataOperationType dataOperationType,
-            Map<String, Object> dataAsMap) {
+                        Map<String, Object> dataAsMap) {
         this.dataOperationType = dataOperationType;
         this.dataAsMap = dataAsMap;
     }

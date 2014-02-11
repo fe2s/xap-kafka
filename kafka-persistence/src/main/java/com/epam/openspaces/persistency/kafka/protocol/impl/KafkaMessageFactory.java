@@ -1,7 +1,7 @@
-package com.epam.openspaces.persistency.kafka;
+package com.epam.openspaces.persistency.kafka.protocol.impl;
 
-import com.epam.openspaces.persistency.kafka.protocol.KafkaDataOperationType;
-import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
+import com.epam.openspaces.persistency.kafka.KafkaPersistenceException;
+import com.epam.openspaces.persistency.kafka.protocol.AbstractKafkaMessageFactory;
 import com.gigaspaces.sync.DataSyncOperation;
 import com.gigaspaces.sync.DataSyncOperationType;
 
@@ -10,11 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Factory of Kafka messages.
+ * Factory of Kafka default protocol objects
  *
  * @author Oleksiy_Dyagilev
  */
-public class KafkaMessageFactory {
+public class KafkaMessageFactory implements AbstractKafkaMessageFactory<KafkaMessageKey, KafkaMessage> {
 
     // mapping from XAP operation type to Kafka message operation type
     private static final Map<DataSyncOperationType, KafkaDataOperationType> typesMap = new HashMap<DataSyncOperationType, KafkaDataOperationType>();
@@ -32,9 +32,10 @@ public class KafkaMessageFactory {
      * The underlying object of data sync operation must be Serializable,
      * otherwise KafkaPersistenceException is thrown.
      *
-     * @throws KafkaPersistenceException if underlying object of data sync operation is not Serializable.
+     * @throws com.epam.openspaces.persistency.kafka.KafkaPersistenceException if underlying object of data sync operation is not Serializable.
      */
-    public static KafkaMessage create(DataSyncOperation syncOperation) throws KafkaPersistenceException {
+    @Override
+    public KafkaMessage createMessage(DataSyncOperation syncOperation) throws KafkaPersistenceException {
         KafkaDataOperationType type = typesMap.get(syncOperation.getDataSyncOperationType());
 
         if (syncOperation.supportsDataAsObject()) {
@@ -50,6 +51,15 @@ public class KafkaMessageFactory {
             throw new KafkaPersistenceException("Unable to convert DataSyncOperation to Kafka protocol. " +
                     "DataSyncOperation = " + syncOperation);
         }
+    }
+
+
+    /**
+     * Creates uniform distributed Message Key.
+     */
+    @Override
+    public KafkaMessageKey createMessageKey(DataSyncOperation syncOperation) throws KafkaPersistenceException {
+        return new KafkaMessageKey(System.identityHashCode(syncOperation));
     }
 
 }

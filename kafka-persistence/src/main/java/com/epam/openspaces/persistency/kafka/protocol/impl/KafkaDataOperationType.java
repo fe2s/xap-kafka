@@ -1,9 +1,9 @@
-package com.epam.openspaces.persistency.kafka.protocol;
+package com.epam.openspaces.persistency.kafka.protocol.impl;
 
 /**
  * Represents data operation type as a part of XAP-Kafka message protocol.
  *
- * @see com.epam.openspaces.persistency.kafka.protocol.KafkaMessage
+ * @see KafkaMessage
  * @author Oleksiy_Dyagilev
  */
 public enum KafkaDataOperationType {

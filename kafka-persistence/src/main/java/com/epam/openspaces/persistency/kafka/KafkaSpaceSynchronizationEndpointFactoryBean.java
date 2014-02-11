@@ -1,12 +1,16 @@
 package com.epam.openspaces.persistency.kafka;
 
-import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
+import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaMessage;
+import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaMessageKey;
+import com.epam.openspaces.persistency.kafka.protocol.impl.serializer.KafkaMessageEncoder;
+import com.epam.openspaces.persistency.kafka.protocol.impl.serializer.KafkaMessageKeyEncoder;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.ProducerConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
+import kafka.producer.DefaultPartitioner;
 
 import java.util.Properties;
 
@@ -20,7 +24,7 @@ public class KafkaSpaceSynchronizationEndpointFactoryBean implements FactoryBean
     private static final Log logger = LogFactory.getLog(KafkaSpaceSynchronizationEndpointFactoryBean.class);
 
     private Properties producerProperties;
-    private Producer<String, KafkaMessage> producer;
+    private Producer<KafkaMessageKey, KafkaMessage> producer;
 
     @Override
     public KafkaSpaceSynchronizationEndpoint getObject() throws Exception {
@@ -29,7 +33,8 @@ public class KafkaSpaceSynchronizationEndpointFactoryBean implements FactoryBean
         Properties combinedProducerProps = applyDefaultProducerProperties();
 
         ProducerConfig config = new ProducerConfig(combinedProducerProps);
-        this.producer = new Producer<String, KafkaMessage>(config);
+
+        this.producer = new Producer<KafkaMessageKey, KafkaMessage>(config);
 
         return new KafkaSpaceSynchronizationEndpoint(this.producer);
     }
@@ -60,5 +65,18 @@ public class KafkaSpaceSynchronizationEndpointFactoryBean implements FactoryBean
         if (this.producer != null) {
             producer.close();
         }
+    }
+
+    /**
+     * Default producer properties to configure XAP-Kafka protocol
+     */
+    class DefaultProducerProperties extends Properties {
+
+        public DefaultProducerProperties() {
+            put("key.serializer.class", KafkaMessageKeyEncoder.class.getCanonicalName());
+            put("serializer.class", KafkaMessageEncoder.class.getCanonicalName());
+            put("partitioner.class", DefaultPartitioner.class.getCanonicalName());
+        }
+
     }
 }
