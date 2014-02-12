@@ -2,11 +2,14 @@ package com.epam.consumer;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.logging.Logger;
+
+import com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer;
+import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaMessage;
+import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaMessageKey;
 import kafka.common.KafkaException;
 import kafka.consumer.ConsumerIterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,16 +17,13 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer;
-import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
-
 /**
  * Illustrates how to subscribe to Kafka topic with a help of
- * {@link KafkaConsumer} Consumed data is saved to database.
+ * {@link com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer} Consumed data is saved to database.
  */
 public class Consumer implements InitializingBean, DisposableBean {
 
-    private static final Log logger = LogFactory.getLog(Consumer.class);
+    private Logger log = Logger.getLogger(this.getClass().getName());
 
     private KafkaConsumer consumer;
     private ScheduledExecutorService executorService;
@@ -46,7 +46,7 @@ public class Consumer implements InitializingBean, DisposableBean {
 
     private void consume() {
 
-        ConsumerIterator<String, KafkaMessage> iterator = consumer.createIterator("data");
+        ConsumerIterator<KafkaMessageKey, KafkaMessage> iterator = consumer.createIterator("data");
 
         while (iterator.hasNext()) {
             Session session = getSessionFactory().openSession();
@@ -54,7 +54,7 @@ public class Consumer implements InitializingBean, DisposableBean {
             try {
 
                 KafkaMessage kafkaMessage = iterator.next().message();
-                logger.info("Consuming message " + kafkaMessage);
+                log.info("Consuming Kafka message " + kafkaMessage);
 
                 switch (kafkaMessage.getDataOperationType()) {
                 case WRITE:

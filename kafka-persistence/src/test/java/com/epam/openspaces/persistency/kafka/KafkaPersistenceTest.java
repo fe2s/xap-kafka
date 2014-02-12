@@ -1,8 +1,8 @@
 package com.epam.openspaces.persistency.kafka;
 
 import com.epam.openspaces.persistency.kafka.EmbeddedSpace.Schema;
-import com.epam.openspaces.persistency.kafka.protocol.KafkaDataOperationType;
-import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
+import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaMessage;
+import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaDataOperationType;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;

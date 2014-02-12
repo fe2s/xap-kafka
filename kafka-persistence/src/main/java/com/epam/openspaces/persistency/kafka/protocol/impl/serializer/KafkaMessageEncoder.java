@@ -1,6 +1,6 @@
-package com.epam.openspaces.persistency.kafka.serializer;
+package com.epam.openspaces.persistency.kafka.protocol.impl.serializer;
 
-import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
+import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaMessage;
 import kafka.serializer.Encoder;
 import kafka.utils.VerifiableProperties;
 import org.apache.commons.lang.SerializationUtils;
@@ -8,7 +8,7 @@ import org.apache.commons.lang.SerializationUtils;
 /**
  * Encoder for XAP-Kafka protocol.
  *
- * @see com.epam.openspaces.persistency.kafka.protocol.KafkaMessage
+ * @see com.epam.openspaces.persistency.kafka.protocol.impl.KafkaMessage
  *
  * @author Oleksiy_Dyagilev
  */
@@ -19,7 +19,8 @@ public class KafkaMessageEncoder implements Encoder<KafkaMessage> {
     }
 
     @Override
-    public byte[] toBytes(KafkaMessage dataOperation) {
-        return SerializationUtils.serialize(dataOperation);
+    public byte[] toBytes(KafkaMessage message) {
+        return SerializationUtils.serialize(message);
     }
+
 }

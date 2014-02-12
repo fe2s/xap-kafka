@@ -1,7 +1,8 @@
 package com.epam.openspaces.persistency.kafka;
 
 import com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer;
-import com.epam.openspaces.persistency.kafka.protocol.KafkaMessage;
+import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaMessage;
+import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaMessageKey;
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.ConsumerIterator;
@@ -39,7 +40,7 @@ public class TestConsumerTask implements Callable<List<KafkaMessage>> {
     @Override
     public List<KafkaMessage> call() throws Exception {
         List<KafkaMessage> result = new ArrayList<KafkaMessage>(objectCount);
-        ConsumerIterator<String, KafkaMessage> iterator = consumer.createIterator(topic);
+        ConsumerIterator<KafkaMessageKey, KafkaMessage> iterator = consumer.createIterator(topic);
         while (iterator.hasNext()) {
             result.add(iterator.next().message());
             if (result.size() >= objectCount) {

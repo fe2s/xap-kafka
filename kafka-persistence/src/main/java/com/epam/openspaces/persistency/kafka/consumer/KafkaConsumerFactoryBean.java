@@ -11,7 +11,7 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 
 /**
- * Creates {@link com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer} bean.
+ * Creates {@link KafkaConsumer} bean.
  */
 public class KafkaConsumerFactoryBean implements FactoryBean<KafkaConsumer>, DisposableBean {
 
