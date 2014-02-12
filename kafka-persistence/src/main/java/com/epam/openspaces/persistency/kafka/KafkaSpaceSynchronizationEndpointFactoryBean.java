@@ -10,7 +10,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
-import kafka.producer.DefaultPartitioner;
 
 import java.util.Properties;
 
@@ -90,7 +89,6 @@ public class KafkaSpaceSynchronizationEndpointFactoryBean implements FactoryBean
         public DefaultProducerProperties() {
             put("key.serializer.class", KafkaMessageKeyEncoder.class.getCanonicalName());
             put("serializer.class", KafkaMessageEncoder.class.getCanonicalName());
-            put("partitioner.class", DefaultPartitioner.class.getCanonicalName());
         }
 
     }

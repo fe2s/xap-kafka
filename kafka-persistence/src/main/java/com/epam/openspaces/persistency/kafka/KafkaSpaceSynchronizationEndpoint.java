@@ -43,6 +43,8 @@ public class KafkaSpaceSynchronizationEndpoint extends AbstractKafkaSpaceSynchro
             return null;
         }
     }
+
+
     public static class Config {
         private String spaceDocumentKafkaTopicPropertyName;
 

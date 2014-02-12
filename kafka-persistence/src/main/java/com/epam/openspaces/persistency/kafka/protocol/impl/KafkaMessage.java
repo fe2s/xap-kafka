@@ -7,6 +7,9 @@ import java.util.Map;
 
 /**
  * Message of default XAP-Kafka protocol.
+ *
+ * Represents XAP data operation. Consists of the operation type and data.
+ * Data itself could be represented either as a single object or as a dictionary of key/values.
  * 
  * @see com.epam.openspaces.persistency.kafka.protocol.impl.serializer.KafkaMessageEncoder
  * @see com.epam.openspaces.persistency.kafka.protocol.impl.serializer.KafkaMessageDecoder
@@ -32,22 +35,37 @@ public class KafkaMessage implements AbstractKafkaMessage, Serializable {
         this.dataAsMap = dataAsMap;
     }
 
+    /**
+     * @return operation type
+     */
     public KafkaDataOperationType getDataOperationType() {
         return dataOperationType;
     }
 
+    /**
+     * @return data as object. May return null if not supported. Call hasDataAsObject() to check if supported.
+     */
     public Serializable getDataAsObject() {
         return dataAsObject;
     }
 
+    /**
+     * @return data as a dictionary. May return null if not supported. Call hasDataAsMap() to check if supported.
+     */
     public Map<String, Object> getDataAsMap() {
         return dataAsMap;
     }
 
+    /**
+     * @return true if data represents object
+     */
     public boolean hasDataAsObject() {
         return dataAsObject != null;
     }
 
+    /**
+     * @return true if data represents dictionary
+     */
     public boolean hasDataAsMap() {
         return dataAsMap != null;
     }

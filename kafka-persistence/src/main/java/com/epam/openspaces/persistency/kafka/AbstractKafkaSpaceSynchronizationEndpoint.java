@@ -52,10 +52,10 @@ public abstract class AbstractKafkaSpaceSynchronizationEndpoint
     /**
      * converts XAP data sync operations to Kafka messages (protocol objects) and sends them to Kafka server
      */
-    protected void sendToKafka(DataSyncOperation[] transactionParticipantDataItems) {
-        List<KeyedMessage<K, M>> kafkaMessages = new ArrayList<KeyedMessage<K, M>>(transactionParticipantDataItems.length);
+    protected void sendToKafka(DataSyncOperation[] dataSyncOperations) {
+        List<KeyedMessage<K, M>> kafkaMessages = new ArrayList<KeyedMessage<K, M>>(dataSyncOperations.length);
 
-        for (DataSyncOperation dataSyncOperation : transactionParticipantDataItems) {
+        for (DataSyncOperation dataSyncOperation : dataSyncOperations) {
             try {
                 M message = kafkaMessageFactory.createMessage(dataSyncOperation);
                 K key = kafkaMessageFactory.createMessageKey(dataSyncOperation);
