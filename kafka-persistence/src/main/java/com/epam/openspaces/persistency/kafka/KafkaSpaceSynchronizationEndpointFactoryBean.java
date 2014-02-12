@@ -28,7 +28,7 @@ public class KafkaSpaceSynchronizationEndpointFactoryBean implements FactoryBean
     private Properties producerProperties;
     private Producer<KafkaMessageKey, KafkaMessage> producer;
 
-    private String spaceDocumentKafkaTopicName = "spaceDocument.kafka.topic";
+    private String spaceDocumentKafkaTopicPropertyName = "spaceDocument.kafka.topic";
 
     @Override
     public KafkaSpaceSynchronizationEndpoint getObject() throws Exception {
@@ -36,17 +36,17 @@ public class KafkaSpaceSynchronizationEndpointFactoryBean implements FactoryBean
 
         Properties combinedProducerProps = applyDefaultProducerProperties();
 
-        Config synchronizationEndpointConfig = aplySynchronizationEndpointConfig();
-        ProducerConfig config = new ProducerConfig(combinedProducerProps);
+        Config synchronizationEndpointConfig = createSynchronizationEndpointConfig();
+        ProducerConfig producerConfig = new ProducerConfig(combinedProducerProps);
 
-        this.producer = new Producer<KafkaMessageKey, KafkaMessage>(config);
+        this.producer = new Producer<KafkaMessageKey, KafkaMessage>(producerConfig);
 
         return new KafkaSpaceSynchronizationEndpoint(this.producer, synchronizationEndpointConfig);
     }
 
-    private Config aplySynchronizationEndpointConfig() {
+    private Config createSynchronizationEndpointConfig() {
         Config config = new Config();
-        config.setSpaceDocumentKafkaTopicName(spaceDocumentKafkaTopicName);
+        config.setSpaceDocumentKafkaTopicPropertyName(spaceDocumentKafkaTopicPropertyName);
         return config;
     }
 
@@ -70,8 +70,8 @@ public class KafkaSpaceSynchronizationEndpointFactoryBean implements FactoryBean
         this.producerProperties = producerProperties;
     }
 
-    public void setSpaceDocumentKafkaTopicName(String spaceDocumentKafkaTopicName) {
-        this.spaceDocumentKafkaTopicName = spaceDocumentKafkaTopicName;
+    public void setSpaceDocumentKafkaTopicPropertyName(String spaceDocumentKafkaTopicPropertyName) {
+        this.spaceDocumentKafkaTopicPropertyName = spaceDocumentKafkaTopicPropertyName;
     }
 
     @Override

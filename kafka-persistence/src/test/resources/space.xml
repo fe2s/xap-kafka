@@ -27,6 +27,10 @@
             <os-core:basic-index path="Name"/>
             <os-core:extended-index path="Price"/>
         </os-core:space-type>
+
+        <os-core:space-type type-name="Category">
+            <os-core:id property="name"/>
+        </os-core:space-type>
     </os-core:space>
 
     <!--

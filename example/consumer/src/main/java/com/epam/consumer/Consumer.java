@@ -39,14 +39,14 @@ public class Consumer implements InitializingBean, DisposableBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
-        executorService = Executors.newScheduledThreadPool(1);
-        executorService.execute(new ConsumerTask());
+        executorService = Executors.newScheduledThreadPool(2);
+        executorService.execute(new ConsumerTask("product"));
+        executorService.execute(new ConsumerTask("data"));
     }
 
-    private void consume() {
+    private void consume(String topicName) {
 
-        ConsumerIterator<KafkaMessageKey, KafkaMessage> iterator = consumer.createIterator("data");
+        ConsumerIterator<KafkaMessageKey, KafkaMessage> iterator = consumer.createIterator(topicName);
 
         while (iterator.hasNext()) {
             Session session = getSessionFactory().openSession();
@@ -134,11 +134,16 @@ public class Consumer implements InitializingBean, DisposableBean {
 
     public class ConsumerTask implements Runnable {
 
+        private final String topicName;
+
         @Override
         public void run() {
-            consume();
+            consume(topicName);
         }
 
+        public ConsumerTask(String topicName) {
+            this.topicName = topicName;
+        }
     }
 
 }

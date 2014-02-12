@@ -24,7 +24,7 @@ public class KafkaSpaceSynchronizationEndpoint extends AbstractKafkaSpaceSynchro
     }
 
     /**
-     * inspects original data class for @KafkaTopic annotation
+     * For POJO inspects original data class for @KafkaTopic annotation. For space document find {@Link Config.spaceDocumentKafkaTopicPropertyName}.
      */
     protected String resolveTopicForMessage(KafkaMessage message) {
         if (message.hasDataAsObject()) {
@@ -36,20 +36,22 @@ public class KafkaSpaceSynchronizationEndpoint extends AbstractKafkaSpaceSynchro
             } else {
                 return kafkaTopic.value();
             }
-        } else {
-            Object topic = message.getDataAsMap().get(config.getSpaceDocumentKafkaTopicName());
+        } else if(message.hasDataAsMap()){
+            Object topic = message.getDataAsMap().get(config.getSpaceDocumentKafkaTopicPropertyName());
             return topic != null ? topic.toString() : null;
+        } else{
+            return null;
         }
     }
     public static class Config {
-        private String spaceDocumentKafkaTopicName;
+        private String spaceDocumentKafkaTopicPropertyName;
 
-        public String getSpaceDocumentKafkaTopicName() {
-            return spaceDocumentKafkaTopicName;
+        public String getSpaceDocumentKafkaTopicPropertyName() {
+            return spaceDocumentKafkaTopicPropertyName;
         }
 
-        public void setSpaceDocumentKafkaTopicName(String spaceDocumentKafkaTopicName) {
-            this.spaceDocumentKafkaTopicName = spaceDocumentKafkaTopicName;
+        public void setSpaceDocumentKafkaTopicPropertyName(String spaceDocumentKafkaTopicPropertyName) {
+            this.spaceDocumentKafkaTopicPropertyName = spaceDocumentKafkaTopicPropertyName;
         }
     }
 

@@ -46,7 +46,7 @@
         <property name="dataSource" ref="dataSource"/>
         <property name="annotatedClasses">
             <list>
-                <value>com.epam.common.Data</value>
+                <value>com.epam.common.Person</value>
             </list>
         </property>
         <property name="hibernateProperties">

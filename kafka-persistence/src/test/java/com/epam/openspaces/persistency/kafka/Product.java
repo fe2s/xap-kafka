@@ -10,10 +10,11 @@ public class Product extends SpaceDocument {
     private static final String PROPERTY_CATALOG_NUMBER = "CatalogNumber";
     private static final String PROPERTY_NAME = "Name";
     private static final String PROPERTY_PRICE = "Price";
+    public static final String DEFAULT_SPACE_DOCUMENT_KAFKA_TOPIC = "spaceDocument.kafka.topic";
 
     public Product() {
         super(TYPE_NAME);
-        super.setProperty("spaceDocument.kafka.topic", "Product");
+        super.setProperty(DEFAULT_SPACE_DOCUMENT_KAFKA_TOPIC, "Product");
     }
 
     public String getCatalogNumber() {

@@ -6,18 +6,16 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
+import com.epam.common.Person;
 import com.epam.common.Product;
-import com.gigaspaces.document.SpaceDocument;
 import org.openspaces.core.GigaSpace;
 import org.openspaces.core.SpaceInterruptedException;
 import org.openspaces.core.context.GigaSpaceContext;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.epam.common.Data;
-
 /**
- * A feeder bean starts a scheduled task that writes a new Data objects to the
+ * A feeder bean starts a scheduled task that writes a new Person objects to the
  * space (in an unprocessed state).
  * 
  * <p>
@@ -47,7 +45,7 @@ public class Feeder implements InitializingBean, DisposableBean {
 
     /**
      * Sets the number of types that will be used to set
-     * {@link com.epam.common.Data#setType(Long)}.
+     * {@link com.epam.common.Person#setType(Long)}.
      * 
      * <p>
      * The type is used as the routing index for partitioned space. This will
@@ -89,15 +87,18 @@ public class Feeder implements InitializingBean, DisposableBean {
         public void run() {
             try {
                 long time = System.currentTimeMillis();
-                Data data = new Data((counter++ % numberOfTypes), "FEEDER "
+                Person person = new Person((counter++ % numberOfTypes), "FEEDER "
                         + Long.toString(time));
-                gigaSpace.write(data);
+                gigaSpace.write(person);
+
                 Product product = new Product()
                         .setCatalogNumber("hw-"+counter)
                         .setName("Anvil")
-                        .setPrice(9.99f);
+                        .setPrice((float)Math.random()*100);
                 gigaSpace.write(product);
-                log.info("--- FEEDER WROTE " + data);
+
+                log.info("--- FEEDER WROTE " + person);
+                log.info("--- " + product);
             } catch (SpaceInterruptedException e) {
                 // ignore, we are being shutdown
             } catch (Exception e) {

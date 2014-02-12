@@ -1,50 +1,44 @@
-package com.epam.common;
+package com.epam.openspaces.persistency.kafka;
 
 import com.epam.openspaces.persistency.kafka.annotations.KafkaTopic;
 import com.gigaspaces.annotation.pojo.SpaceClass;
 import com.gigaspaces.annotation.pojo.SpaceId;
 import com.gigaspaces.annotation.pojo.SpaceRouting;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
 import java.io.Serializable;
 
 /**
  * A simple object used to work with the Space.
  */
 @KafkaTopic("data")
-@Entity
-@Table(name="DATA")
 @SpaceClass
-public class Data implements Serializable {
+public class Person implements Serializable {
 
-    @Id
     private String id;
 
     private Long type;
 
-    private String rawData;
+    private String name;
 
     /**
-     * Constructs a new Data object.
+     * Constructs a new Person object.
      */
-    public Data() {
+    public Person() {
     }
 
     /**
-     * Constructs a new Data object with the given type
+     * Constructs a new Person object with the given type
      * and raw data.
      */
-    public Data(long type, String rawData) {
+    public Person(long type, String name) {
         this.type = type;
-        this.rawData = rawData;
+        this.name = name;
     }
 
     /**
      * The id of this object.
      */
-    @SpaceId(autoGenerate=true)
+    @SpaceId(autoGenerate = true)
     public String getId() {
         return id;
     }
@@ -77,23 +71,40 @@ public class Data implements Serializable {
     /**
      * The raw data this object holds.
      */
-    public String getRawData() {
-        return rawData;
+    public String getName() {
+        return name;
     }
 
     /**
      * The raw data this object holds.
      */
-    public void setRawData(String rawData) {
-        this.rawData = rawData;
+    public void setName(String rawData) {
+        this.name = rawData;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Person person = (Person) o;
+
+        if (!id.equals(person.id)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
     }
 
     @Override
     public String toString() {
-        return "Data{" +
+        return "Person{" +
                 "id='" + id + '\'' +
                 ", type=" + type +
-                ", rawData='" + rawData + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }
