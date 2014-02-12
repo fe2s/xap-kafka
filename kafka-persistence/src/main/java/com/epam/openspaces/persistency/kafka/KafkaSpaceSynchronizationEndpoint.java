@@ -41,6 +41,8 @@ public class KafkaSpaceSynchronizationEndpoint extends AbstractKafkaSpaceSynchro
             return topic != null ? topic.toString() : null;
         }
     }
+
+
     public static class Config {
         private String spaceDocumentKafkaTopicName;
 
