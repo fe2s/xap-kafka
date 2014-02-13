@@ -1,8 +1,9 @@
 package com.epam.openspaces.persistency.kafka;
 
 import com.epam.openspaces.persistency.kafka.EmbeddedSpace.Schema;
-import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaMessage;
 import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaDataOperationType;
+import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaMessage;
+import com.gigaspaces.document.SpaceDocument;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.openspaces.core.GigaSpaceConfigurer;
 import org.openspaces.core.space.UrlSpaceConfigurer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -26,8 +28,9 @@ public class KafkaPersistenceTest {
     private static EmbeddedZookeper embeddedZookeper;
     private static EmbeddedKafka embeddedKafka;
     private static EmbeddedSpace embeddedSpace;
-    private static EmbeddedSpace embeddedMiror;
+    private static EmbeddedSpace embeddedMirror;
     private static int zookeeperPort;
+    private static GigaSpace gigaspace;
 
     @BeforeClass
     public static void init() throws Exception {
@@ -45,14 +48,16 @@ public class KafkaPersistenceTest {
         embeddedSpace = new EmbeddedSpace("space.xml", Schema.PARTITIONED);
         embeddedSpace.startup();
 
-        embeddedMiror = new EmbeddedSpace("mirror.xml", Schema.NONE);
-        embeddedMiror.startup();
+        embeddedMirror = new EmbeddedSpace("mirror.xml", Schema.NONE);
+        embeddedMirror.startup();
+
+        gigaspace = new GigaSpaceConfigurer(new UrlSpaceConfigurer("jini://*/*/space?groups=kafka-test")).gigaSpace();
 
     }
 
     @AfterClass
     public static void shutdown() {
-        embeddedMiror.shutdown();
+        embeddedMirror.shutdown();
         embeddedSpace.shutdown();
 
         embeddedKafka.shutdown();
@@ -60,36 +65,27 @@ public class KafkaPersistenceTest {
     }
 
     @Test
-    public void shouldPassWhenProducePOJO() throws ExecutionException, InterruptedException {
-
-        GigaSpace gigaspace = new GigaSpaceConfigurer(new UrlSpaceConfigurer("jini://*/*/space?groups=kafka-test")).gigaSpace();
-
-        TestConsumerTask consumer = new TestConsumerTask("data", objectCount, zookeeperPort);
-        ExecutorService ex = Executors.newCachedThreadPool();
-
-        Future<List<KafkaMessage>> result = ex.submit(consumer);
+    public void testPOJO() throws ExecutionException, InterruptedException {
+        Future<List<KafkaMessage>> result = submitCallableTask("data");
 
         List<KafkaMessage> expectedList = new ArrayList<KafkaMessage>();
 
         for (int i = 0; i < objectCount / 3; i++) {
             long time = System.currentTimeMillis();
-            // Insert data to space
-            Data data = new Data(i, "FEEDER Write" + Long.toString(time));
-            gigaspace.write(data);
-            KafkaMessage messageWrite = new KafkaMessage(KafkaDataOperationType.WRITE, data);
-            expectedList.add(messageWrite);
 
-            // Update data to space
-            data.setRawData("FEEDER Update" + Long.toString(time));
-            gigaspace.write(data);
-            KafkaMessage messageUpdate = new KafkaMessage(KafkaDataOperationType.UPDATE, data);
-            expectedList.add(messageUpdate);
+            // Insert person to space
+            Person person = new Person(i, "Paul " + Long.toString(time));
+            gigaspace.write(person);
+            addKafkaMessageToListForPojo(expectedList, KafkaDataOperationType.WRITE, person);
 
-            // Remove data to space
-            gigaspace.clear(data);
-            KafkaMessage messageRemove = new KafkaMessage(KafkaDataOperationType.REMOVE, data);
-            expectedList.add(messageRemove);
+            // Update person in space
+            person.setName("Paul " + Long.toString(time));
+            gigaspace.write(person);
+            addKafkaMessageToListForPojo(expectedList, KafkaDataOperationType.UPDATE, person);
 
+            // Remove person to space
+            gigaspace.clear(person);
+            addKafkaMessageToListForPojo(expectedList, KafkaDataOperationType.REMOVE, person);
         }
 
         List<KafkaMessage> actualList = result.get();
@@ -97,15 +93,14 @@ public class KafkaPersistenceTest {
         assertEquals(expectedList, actualList);
     }
 
+    private void addKafkaMessageToListForPojo(List<KafkaMessage> list, KafkaDataOperationType type, Person document){
+        KafkaMessage messageRemove = new KafkaMessage(type, document);
+        list.add(messageRemove);
+    }
+
     @Test
-    public void shouldPassWhenProduceSpaceDocument() throws ExecutionException, InterruptedException {
-
-        GigaSpace gigaspace = new GigaSpaceConfigurer(new UrlSpaceConfigurer("jini://*/*/space?groups=kafka-test")).gigaSpace();
-
-        TestConsumerTask consumer = new TestConsumerTask("Product", objectCount, zookeeperPort);
-        ExecutorService ex = Executors.newCachedThreadPool();
-
-        Future<List<KafkaMessage>> result = ex.submit(consumer);
+    public void testExtendedSpaceDocument() throws ExecutionException, InterruptedException {
+        Future<List<KafkaMessage>> result = submitCallableTask("Product");
 
         List<KafkaMessage> expectedList = new ArrayList<KafkaMessage>();
 
@@ -115,29 +110,69 @@ public class KafkaPersistenceTest {
             Product product = new Product()
                     .setCatalogNumber("hw-"+i)
                     .setName("Anvil")
-                    .setPrice(9.99f);
+                    .setPrice((float) Math.random() * 100);
 
             gigaspace.write(product);
-            Map<String, Object> writeObjectAsMap = product.getProperties();
-            KafkaMessage messageWrite = new KafkaMessage(KafkaDataOperationType.WRITE, writeObjectAsMap);
-            expectedList.add(messageWrite);
+            addKafkaMessageToListForSpaceDocument(expectedList, KafkaDataOperationType.WRITE, product);
 
-            product.setPrice(9.99f);
+            // Update product in space
+            product.setPrice((float) Math.random() * 100);
             gigaspace.write(product);
-            Map<String, Object> updateObjectAsMap = product.getProperties();
-            KafkaMessage messageUpdate = new KafkaMessage(KafkaDataOperationType.UPDATE, updateObjectAsMap);
-            expectedList.add(messageUpdate);
+            addKafkaMessageToListForSpaceDocument(expectedList, KafkaDataOperationType.UPDATE, product);
 
-            // Remove product to space
+            // Remove product from space
             gigaspace.clear(product);
-            Map<String, Object> removeObjectAsMap = product.getProperties();
-            KafkaMessage messageRemove = new KafkaMessage(KafkaDataOperationType.REMOVE, removeObjectAsMap);
-            expectedList.add(messageRemove);
+            addKafkaMessageToListForSpaceDocument(expectedList, KafkaDataOperationType.REMOVE, product);
 
         }
 
         List<KafkaMessage> actualList = result.get();
 
         assertEquals(expectedList, actualList);
+    }
+
+    @Test
+    public void testSpaceDocument() throws ExecutionException, InterruptedException {
+        Future<List<KafkaMessage>> result = submitCallableTask("category");
+
+        List<KafkaMessage> expectedList = new ArrayList<KafkaMessage>();
+
+        for (int i = 0; i < objectCount / 3; i++) {
+            long time = System.currentTimeMillis();
+            // Insert category to space
+            SpaceDocument category = new SpaceDocument("Category")
+                    .setProperty("name", "category" + i)
+                    .setProperty("description", "description")
+                    .setProperty(Product.DEFAULT_SPACE_DOCUMENT_KAFKA_TOPIC, "category");
+
+            gigaspace.write(category);
+            addKafkaMessageToListForSpaceDocument(expectedList, KafkaDataOperationType.WRITE, category);
+
+            // Update category in space
+            category.setProperty("description", "another description");
+            gigaspace.write(category);
+            addKafkaMessageToListForSpaceDocument(expectedList, KafkaDataOperationType.UPDATE, category);
+
+            // Remove category from space
+            gigaspace.clear(category);
+            addKafkaMessageToListForSpaceDocument(expectedList, KafkaDataOperationType.REMOVE, category);
+        }
+
+        List<KafkaMessage> actualList = result.get();
+
+        assertEquals(expectedList, actualList);
+    }
+
+    private void addKafkaMessageToListForSpaceDocument(List<KafkaMessage> list, KafkaDataOperationType type, SpaceDocument document){
+        Map<String, Object> updateObjectAsMap = new HashMap(document.getProperties());
+        KafkaMessage messageRemove = new KafkaMessage(type, updateObjectAsMap);
+        list.add(messageRemove);
+    }
+
+    private Future<List<KafkaMessage>> submitCallableTask(String topicName) {
+        TestConsumerTask consumer = new TestConsumerTask(topicName, objectCount, zookeeperPort);
+        ExecutorService ex = Executors.newCachedThreadPool();
+
+        return ex.submit(consumer);
     }
 }

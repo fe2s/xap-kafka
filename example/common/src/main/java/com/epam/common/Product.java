@@ -5,15 +5,23 @@ import com.gigaspaces.document.SpaceDocument;
 /**
  * Created by Mykola_Zalyayev on 10.02.14.
  */
+
+/**
+ * A simple extended space document used to work with the Space. Demonstrate set topic name in which write kafka producer.
+ */
 public class Product extends SpaceDocument {
     private static final String TYPE_NAME = "Product";
     private static final String PROPERTY_CATALOG_NUMBER = "CatalogNumber";
     private static final String PROPERTY_NAME = "Name";
     private static final String PROPERTY_PRICE = "Price";
+    private static final String DEFAULT_SPACE_DOCUMENT_KAFKA_TOPIC = "spaceDocument.kafka.topic";
 
+    /*
+     * Set property to SpaceDocument topic name. Default property name is "spaceDocument.kafka.topic"
+     */
     public Product() {
         super(TYPE_NAME);
-        super.setProperty("spaceDocument.kafka.topic", "data");
+        super.setProperty(DEFAULT_SPACE_DOCUMENT_KAFKA_TOPIC, "product");
     }
 
     public String getCatalogNumber() {
