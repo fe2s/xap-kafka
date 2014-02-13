@@ -1,5 +1,13 @@
 package com.epam.consumer;
 
+import com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer;
+import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaMessage;
+import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaMessageKey;
+import kafka.consumer.ConsumerIterator;
+import kafka.consumer.KafkaStream;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,23 +15,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.logging.Logger;
 
-import com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer;
-import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaMessage;
-import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaMessageKey;
-import kafka.common.KafkaException;
-import kafka.consumer.ConsumerIterator;
-
-import kafka.consumer.KafkaStream;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-
 /**
  * Illustrates how to subscribe to Kafka topic with a help of
- * {@link com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer} Consumed data is saved to database.
+ * {@link com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer} Consumed data is print to log.
  */
 public class Consumer implements InitializingBean, DisposableBean {
 
@@ -31,14 +25,9 @@ public class Consumer implements InitializingBean, DisposableBean {
 
     private KafkaConsumer consumer;
     private ScheduledExecutorService executorService;
-    private SessionFactory sessionFactory;
 
     public void setConsumer(KafkaConsumer consumer) {
         this.consumer = consumer;
-    }
-
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
     }
 
     @Override
@@ -64,82 +53,10 @@ public class Consumer implements InitializingBean, DisposableBean {
         log.info("Starting Kafka consumer for topic " + topicName);
 
         while (iterator.hasNext()) {
-            Session session = getSessionFactory().openSession();
-            Transaction tr = session.beginTransaction();
-            try {
-
-                KafkaMessage kafkaMessage = iterator.next().message();
-                log.info("Consuming Kafka message " + kafkaMessage);
-
-                switch (kafkaMessage.getDataOperationType()) {
-                    case WRITE:
-                        executeWrite(session, kafkaMessage);
-                        break;
-                    case UPDATE:
-                        executeUpdate(session, kafkaMessage);
-                        break;
-                    case REMOVE:
-                        executeRemove(session, kafkaMessage);
-                    default:
-                        break;
-                }
-                tr.commit();
-            } catch (Exception e) {
-                tr.rollback();
-                throw new KafkaException("Failed to execute bulk operation, latest object", e);
-            } finally {
-                if (session.isOpen()) {
-                    session.close();
-                }
-            }
+            KafkaMessage kafkaMessage = iterator.next().message();
+            log.info("Consuming Kafka message " + kafkaMessage);
         }
 
-    }
-
-    private void executeRemove(Session session, KafkaMessage kafkaMessage) {
-        if (!kafkaMessage.hasDataAsObject()) {
-            return;
-        }
-
-        Object entry = kafkaMessage.getDataAsObject();
-
-        try {
-            session.delete(entry);
-        } catch (HibernateException e) {
-            session.delete(session.merge(entry));
-        }
-    }
-
-    private void executeWrite(Session session, KafkaMessage kafkaMessage) {
-        if (!kafkaMessage.hasDataAsObject()) {
-            return;
-        }
-
-        Object entry = kafkaMessage.getDataAsObject();
-
-        try {
-            session.saveOrUpdate(entry);
-        } catch (HibernateException e) {
-            session.merge(entry);
-        }
-    }
-
-    private void executeUpdate(Session session, KafkaMessage kafkaMessage) {
-        if (!kafkaMessage.hasDataAsObject()) {
-            return;
-        }
-
-        Object entry = kafkaMessage.getDataAsObject();
-
-        try {
-            session.saveOrUpdate(entry);
-        } catch (HibernateException e) {
-            session.merge(entry);
-        }
-    }
-
-    private SessionFactory getSessionFactory() {
-        return sessionFactory;
     }
 
     @Override

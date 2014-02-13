@@ -15,14 +15,10 @@
     -->
     <os-core:giga-space-context/>
 
-    <!-- Empty data source -->
-    <bean id="dummyDataSource" class="com.epam.datasource.DummyExternalDataSource"/>
-
     <!--
         A bean representing a space (an IJSpace implementation).
     -->
-    <os-core:space id="space" url="/./space" schema="persistent" mirror="true"
-                   space-data-source="dummyDataSource">
+    <os-core:space id="space" url="/./space" schema="default" mirror="true">
         <os-core:space-type type-name="Product">
             <os-core:id property="CatalogNumber"/>
             <os-core:basic-index path="Name"/>
