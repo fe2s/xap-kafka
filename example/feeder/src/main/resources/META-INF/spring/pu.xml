@@ -16,11 +16,6 @@
         Spring property configurer which allows us to use system properties (such as user.name).
     -->
     <bean id="propertiesConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-        <property name="properties">
-            <props>
-                <prop key="numberOfTypes">100</prop>
-            </props>
-        </property>
     </bean>
 
     <!--
@@ -44,7 +39,6 @@
         The Data feeder bean, writing new Data objects to the space in a constant interval.
     -->
     <bean id="dataFeeder" class="com.epam.feeder.Feeder" depends-on="gigaSpace">
-        <property name="numberOfTypes" value="${numberOfTypes}" />
     </bean>
     
 </beans>
