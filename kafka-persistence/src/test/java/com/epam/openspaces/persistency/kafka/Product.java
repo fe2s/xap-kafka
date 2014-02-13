@@ -2,7 +2,7 @@ package com.epam.openspaces.persistency.kafka;
 
 import com.gigaspaces.document.SpaceDocument;
 
-import static com.epam.openspaces.persistency.kafka.KafkaPersistenceConstants.DEFAULT_SPACE_DOCUMENT_KAFKA_TOPIC;
+import static com.epam.openspaces.persistency.kafka.KafkaPersistenceConstants.SPACE_DOCUMENT_KAFKA_TOPIC_PROPERTY_NAME;
 
 /**
  * @author Mykola_Zalyayev
@@ -15,7 +15,7 @@ public class Product extends SpaceDocument {
 
     public Product() {
         super(TYPE_NAME);
-        super.setProperty(DEFAULT_SPACE_DOCUMENT_KAFKA_TOPIC, "Product");
+        super.setProperty(SPACE_DOCUMENT_KAFKA_TOPIC_PROPERTY_NAME, "Product");
     }
 
     public String getCatalogNumber() {

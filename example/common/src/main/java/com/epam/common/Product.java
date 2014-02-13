@@ -2,10 +2,11 @@ package com.epam.common;
 
 import com.gigaspaces.document.SpaceDocument;
 
-import static com.epam.openspaces.persistency.kafka.KafkaPersistenceConstants.DEFAULT_SPACE_DOCUMENT_KAFKA_TOPIC;
+import static com.epam.openspaces.persistency.kafka.KafkaPersistenceConstants.SPACE_DOCUMENT_KAFKA_TOPIC_PROPERTY_NAME;
 
 /**
- * A simple extended space document used to work with the Space. Demonstrate set topic name in which write kafka producer.
+ * A simple extended space document used to work with the Space.
+ * Demonstrates how to set topic name which kafka producer write into.
  */
 public class Product extends SpaceDocument {
     private static final String TYPE_NAME = "Product";
@@ -13,13 +14,12 @@ public class Product extends SpaceDocument {
     private static final String PROPERTY_NAME = "Name";
     private static final String PROPERTY_PRICE = "Price";
 
-
     /*
      * Set property to SpaceDocument topic name. Default property name is "spaceDocument.kafka.topic"
      */
     public Product() {
         super(TYPE_NAME);
-        super.setProperty(DEFAULT_SPACE_DOCUMENT_KAFKA_TOPIC, "product");
+        super.setProperty(SPACE_DOCUMENT_KAFKA_TOPIC_PROPERTY_NAME, "product");
     }
 
     public String getCatalogNumber() {

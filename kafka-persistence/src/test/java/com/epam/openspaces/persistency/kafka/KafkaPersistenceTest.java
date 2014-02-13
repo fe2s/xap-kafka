@@ -4,7 +4,6 @@ import com.epam.openspaces.persistency.kafka.EmbeddedSpace.Schema;
 import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaDataOperationType;
 import com.epam.openspaces.persistency.kafka.protocol.impl.KafkaMessage;
 import com.gigaspaces.document.SpaceDocument;
-import org.apache.commons.io.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -12,14 +11,13 @@ import org.openspaces.core.GigaSpace;
 import org.openspaces.core.GigaSpaceConfigurer;
 import org.openspaces.core.space.UrlSpaceConfigurer;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import static com.epam.openspaces.persistency.kafka.KafkaPersistenceConstants.DEFAULT_SPACE_DOCUMENT_KAFKA_TOPIC;
+import static com.epam.openspaces.persistency.kafka.KafkaPersistenceConstants.SPACE_DOCUMENT_KAFKA_TOPIC_PROPERTY_NAME;
 import static org.junit.Assert.assertEquals;
 
 public class KafkaPersistenceTest {
@@ -76,16 +74,16 @@ public class KafkaPersistenceTest {
             // Insert person to space
             Person person = new Person(i, "Paul " + Long.toString(time));
             gigaspace.write(person);
-            addKafkaMessageToListForPojo(expectedList, KafkaDataOperationType.WRITE, person);
+            addMessageToList(expectedList, KafkaDataOperationType.WRITE, person);
 
             // Update person in space
             person.setName("Paul " + Long.toString(time));
             gigaspace.write(person);
-            addKafkaMessageToListForPojo(expectedList, KafkaDataOperationType.UPDATE, person);
+            addMessageToList(expectedList, KafkaDataOperationType.UPDATE, person);
 
             // Remove person to space
             gigaspace.clear(person);
-            addKafkaMessageToListForPojo(expectedList, KafkaDataOperationType.REMOVE, person);
+            addMessageToList(expectedList, KafkaDataOperationType.REMOVE, person);
         }
 
         List<KafkaMessage> actualList = result.get();
@@ -93,9 +91,9 @@ public class KafkaPersistenceTest {
         assertEquals(expectedList, actualList);
     }
 
-    private void addKafkaMessageToListForPojo(List<KafkaMessage> list, KafkaDataOperationType type, Person document){
-        KafkaMessage messageRemove = new KafkaMessage(type, document);
-        list.add(messageRemove);
+    private void addMessageToList(List<KafkaMessage> list, KafkaDataOperationType type, Person document){
+        KafkaMessage message = new KafkaMessage(type, document);
+        list.add(message);
     }
 
     @Test
@@ -113,16 +111,16 @@ public class KafkaPersistenceTest {
                     .setPrice((float) Math.random() * 100);
 
             gigaspace.write(product);
-            addKafkaMessageToListForSpaceDocument(expectedList, KafkaDataOperationType.WRITE, product);
+            addMessageToList(expectedList, KafkaDataOperationType.WRITE, product);
 
             // Update product in space
             product.setPrice((float) Math.random() * 100);
             gigaspace.write(product);
-            addKafkaMessageToListForSpaceDocument(expectedList, KafkaDataOperationType.UPDATE, product);
+            addMessageToList(expectedList, KafkaDataOperationType.UPDATE, product);
 
             // Remove product from space
             gigaspace.clear(product);
-            addKafkaMessageToListForSpaceDocument(expectedList, KafkaDataOperationType.REMOVE, product);
+            addMessageToList(expectedList, KafkaDataOperationType.REMOVE, product);
 
         }
 
@@ -143,19 +141,19 @@ public class KafkaPersistenceTest {
             SpaceDocument category = new SpaceDocument("Category")
                     .setProperty("name", "category" + i)
                     .setProperty("description", "description")
-                    .setProperty(DEFAULT_SPACE_DOCUMENT_KAFKA_TOPIC, "category");
+                    .setProperty(SPACE_DOCUMENT_KAFKA_TOPIC_PROPERTY_NAME, "category");
 
             gigaspace.write(category);
-            addKafkaMessageToListForSpaceDocument(expectedList, KafkaDataOperationType.WRITE, category);
+            addMessageToList(expectedList, KafkaDataOperationType.WRITE, category);
 
             // Update category in space
             category.setProperty("description", "another description");
             gigaspace.write(category);
-            addKafkaMessageToListForSpaceDocument(expectedList, KafkaDataOperationType.UPDATE, category);
+            addMessageToList(expectedList, KafkaDataOperationType.UPDATE, category);
 
             // Remove category from space
             gigaspace.clear(category);
-            addKafkaMessageToListForSpaceDocument(expectedList, KafkaDataOperationType.REMOVE, category);
+            addMessageToList(expectedList, KafkaDataOperationType.REMOVE, category);
         }
 
         List<KafkaMessage> actualList = result.get();
@@ -163,8 +161,8 @@ public class KafkaPersistenceTest {
         assertEquals(expectedList, actualList);
     }
 
-    private void addKafkaMessageToListForSpaceDocument(List<KafkaMessage> list, KafkaDataOperationType type, SpaceDocument document){
-        Map<String, Object> updateObjectAsMap = new HashMap(document.getProperties());
+    private void addMessageToList(List<KafkaMessage> list, KafkaDataOperationType type, SpaceDocument document){
+        Map<String, Object> updateObjectAsMap = new HashMap<String, Object>(document.getProperties());
         KafkaMessage messageRemove = new KafkaMessage(type, updateObjectAsMap);
         list.add(messageRemove);
     }

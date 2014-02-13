@@ -14,9 +14,9 @@ import java.util.Date;
 /**
  * A simple object used to work with the Space.
  */
-@KafkaTopic("data")
+@KafkaTopic("person")
 @Entity
-@Table(name = "DATA")
+@Table(name = "PERSON")
 @SpaceClass
 public class Person implements Serializable {
 
