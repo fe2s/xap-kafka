@@ -6,6 +6,7 @@ import com.gigaspaces.annotation.pojo.SpaceId;
 import com.gigaspaces.annotation.pojo.SpaceRouting;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * A simple object used to work with the Space.
@@ -16,7 +17,7 @@ public class Person implements Serializable {
 
     private String id;
 
-    private Long type;
+    private Integer age;
 
     private String name;
 
@@ -30,8 +31,8 @@ public class Person implements Serializable {
      * Constructs a new Person object with the given type
      * and raw data.
      */
-    public Person(long type, String name) {
-        this.type = type;
+    public Person(Integer age, String name) {
+        this.age = age;
         this.name = name;
     }
 
@@ -56,16 +57,16 @@ public class Person implements Serializable {
      * a partitioned space.
      */
     @SpaceRouting
-    public Long getType() {
-        return type;
+    public Integer getAge() {
+        return age;
     }
 
     /**
      * The type of the data object. Used as the routing field when working with
      * a partitioned space.
      */
-    public void setType(Long type) {
-        this.type = type;
+    public void setAge(Integer date) {
+        this.age = age;
     }
 
     /**
@@ -103,7 +104,7 @@ public class Person implements Serializable {
     public String toString() {
         return "Person{" +
                 "id='" + id + '\'' +
-                ", type=" + type +
+                ", age=" + age +
                 ", name='" + name + '\'' +
                 '}';
     }

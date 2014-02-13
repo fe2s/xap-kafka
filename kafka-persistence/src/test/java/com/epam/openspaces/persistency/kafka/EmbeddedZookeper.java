@@ -40,8 +40,8 @@ public class EmbeddedZookeper {
         factory.shutdown();
 
         try {
-            FileUtils.deleteDirectory(snapDir);
             FileUtils.deleteDirectory(logDir);
+            FileUtils.deleteDirectory(snapDir);
         } catch (IOException e) {
             throw new RuntimeException("Failed to delete temp dirs", e);
         }

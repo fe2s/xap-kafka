@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * Created by Mykola_Zalyayev
+ * @author Mykola_Zalyayev
  */
 public class ProducerProperties extends Properties {
 

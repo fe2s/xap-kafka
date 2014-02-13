@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * A simple object used to work with the Space.
@@ -22,9 +23,9 @@ public class Person implements Serializable {
     @Id
     private String id;
 
-    private Long type;
-
     private String name;
+
+    private Integer age;
 
     /**
      * Constructs a new Person object.
@@ -36,8 +37,8 @@ public class Person implements Serializable {
      * Constructs a new Person object with the given type
      * and raw data.
      */
-    public Person(long type, String name) {
-        this.type = type;
+    public Person(Integer age, String name) {
+        this.age = age;
         this.name = name;
     }
 
@@ -62,16 +63,16 @@ public class Person implements Serializable {
      * a partitioned space.
      */
     @SpaceRouting
-    public Long getType() {
-        return type;
+    public Integer getAge() {
+        return age;
     }
 
     /**
      * The type of the data object. Used as the routing field when working with
      * a partitioned space.
      */
-    public void setType(Long type) {
-        this.type = type;
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     /**
@@ -92,7 +93,7 @@ public class Person implements Serializable {
     public String toString() {
         return "Person{" +
                 "id='" + id + '\'' +
-                ", type=" + type +
+                ", age=" + age +
                 ", name='" + name + '\'' +
                 '}';
     }

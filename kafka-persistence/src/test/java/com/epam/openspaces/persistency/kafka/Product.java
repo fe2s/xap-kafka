@@ -2,15 +2,16 @@ package com.epam.openspaces.persistency.kafka;
 
 import com.gigaspaces.document.SpaceDocument;
 
+import static com.epam.openspaces.persistency.kafka.KafkaPersistenceConstants.DEFAULT_SPACE_DOCUMENT_KAFKA_TOPIC;
+
 /**
- * Created by Mykola_Zalyayev on 10.02.14.
+ * @author Mykola_Zalyayev
  */
 public class Product extends SpaceDocument {
     private static final String TYPE_NAME = "Product";
     private static final String PROPERTY_CATALOG_NUMBER = "CatalogNumber";
     private static final String PROPERTY_NAME = "Name";
     private static final String PROPERTY_PRICE = "Price";
-    public static final String DEFAULT_SPACE_DOCUMENT_KAFKA_TOPIC = "spaceDocument.kafka.topic";
 
     public Product() {
         super(TYPE_NAME);

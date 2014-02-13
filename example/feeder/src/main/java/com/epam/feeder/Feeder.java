@@ -34,7 +34,7 @@ public class Feeder implements InitializingBean, DisposableBean {
 
     private ScheduledFuture<?> sf;
 
-    private long numberOfTypes = 10;
+    private int numberOfTypes = 10;
 
     private long defaultDelay = 1000;
 
@@ -45,13 +45,13 @@ public class Feeder implements InitializingBean, DisposableBean {
 
     /**
      * Sets the number of types that will be used to set
-     * {@link com.epam.common.Person#setType(Long)}.
+     * {@link com.epam.common.Person#setAge(Integer)}.
      * 
      * <p>
      * The type is used as the routing index for partitioned space. This will
      * affect the distribution of Data objects over a partitioned space.
      */
-    public void setNumberOfTypes(long numberOfTypes) {
+    public void setNumberOfTypes(int numberOfTypes) {
         this.numberOfTypes = numberOfTypes;
     }
 
@@ -81,7 +81,7 @@ public class Feeder implements InitializingBean, DisposableBean {
 
     public class FeederTask implements Runnable {
 
-        private long counter = 1;
+        private int counter = 1;
 
         @Override
         public void run() {
