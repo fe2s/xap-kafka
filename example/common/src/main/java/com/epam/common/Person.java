@@ -5,22 +5,14 @@ import com.gigaspaces.annotation.pojo.SpaceClass;
 import com.gigaspaces.annotation.pojo.SpaceId;
 import com.gigaspaces.annotation.pojo.SpaceRouting;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * A simple object used to work with the Space.
  */
 @KafkaTopic("person")
-@Entity
-@Table(name = "PERSON")
 @SpaceClass
 public class Person implements Serializable {
-
-    @Id
     private String id;
 
     private String name;
