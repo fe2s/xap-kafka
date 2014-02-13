@@ -34,7 +34,7 @@ public class Product extends SpaceDocument {
         return this;
     }
 
-    public float getPrice() {
+    public Float getPrice() {
         return super.getProperty(PROPERTY_PRICE);
     }
     public Product setPrice(float price) {
