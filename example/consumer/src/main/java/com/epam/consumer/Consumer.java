@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 /**
  * Illustrates how to subscribe to Kafka topic with a help of
- * {@link com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer} Consumed data is print to log.
+ * {@link com.epam.openspaces.persistency.kafka.consumer.KafkaConsumer} Consumed data is printed to log.
  */
 public class Consumer implements InitializingBean, DisposableBean {
 
