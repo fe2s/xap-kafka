@@ -28,7 +28,7 @@ public class TestConsumerTask implements Callable<List<KafkaMessage>> {
         Properties props = new Properties();
         props.put("zookeeper.connect", "localhost:" + zookeeperPort);
         props.put("group.id", "0");
-        props.put("zookeeper.session.timeout.ms", "400");
+        props.put("zookeeper.session.timeout.ms", "1000");
         props.put("zookeeper.sync.time.ms", "200");
         props.put("auto.commit.interval.ms", "1000");
         props.put("auto.offset.reset", "smallest");
@@ -47,6 +47,8 @@ public class TestConsumerTask implements Callable<List<KafkaMessage>> {
                 break;
             }
         }
+
+        consumer.getConsumerConnector().shutdown();
         return result;
     }
 

@@ -26,9 +26,16 @@ public class EmbeddedZookeper {
     }
 
     public void startup() throws IOException, InterruptedException {
-        snapDir = TestUtils.tempDir();
-        logDir = TestUtils.tempDir();
+        snapDir = TestUtils.tempDir("zookeeperSnapDir");
+        logDir = TestUtils.tempDir("zookeeperLogDir");
         int tickTime = 2000;
+
+        try {
+            FileUtils.deleteDirectory(logDir);
+            FileUtils.deleteDirectory(snapDir);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to delete temp dirs", e);
+        }
 
         zooKeeper = new ZooKeeperServer(snapDir, logDir, tickTime);
         factory = new NIOServerCnxn.Factory(new InetSocketAddress(port), 0);
@@ -38,12 +45,5 @@ public class EmbeddedZookeper {
     public void shutdown() {
         zooKeeper.shutdown();
         factory.shutdown();
-
-        try {
-            FileUtils.deleteDirectory(logDir);
-            FileUtils.deleteDirectory(snapDir);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to delete temp dirs", e);
-        }
     }
 }

@@ -32,7 +32,6 @@
       <includes>
         <include>com.epam:common</include>
         <include>com.epam:kafka-persistence</include>
-        <include>org.hibernate:hibernate-core</include>
       </includes>
     </dependencySet>
   </dependencySets>

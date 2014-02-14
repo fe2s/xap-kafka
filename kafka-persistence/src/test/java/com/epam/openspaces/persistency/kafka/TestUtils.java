@@ -11,11 +11,9 @@ import java.util.List;
  */
 public class TestUtils {
 
-    public static File tempDir() {
+    public static File tempDir(String name) {
         String ioDir = System.getProperty("java.io.tmpdir");
-        File f = new File(ioDir, "kafka-" + (int) (Math.random() * 1000000));
-        f.mkdirs();
-        f.deleteOnExit();
+        File f = new File(ioDir, "kafka-"+name);
         return f;
     }
 

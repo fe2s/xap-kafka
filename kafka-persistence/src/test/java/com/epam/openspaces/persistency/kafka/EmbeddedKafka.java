@@ -24,7 +24,14 @@ public class EmbeddedKafka {
     }
 
     public void startup() {
-        logDir = TestUtils.tempDir();
+        logDir = TestUtils.tempDir("kafkaLogDir");
+
+
+        try {
+            FileUtils.deleteDirectory(logDir);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to delete temp dirs", e);
+        }
 
         Properties props = new Properties();
         props.setProperty("zookeeper.connect", "localhost:" + zookeperPort);
@@ -40,11 +47,5 @@ public class EmbeddedKafka {
 
     public void shutdown() {
         kafka.shutdown();
-
-        try {
-            FileUtils.deleteDirectory(logDir);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to delete temp dirs", e);
-        }
     }
 }
